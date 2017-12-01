@@ -1,0 +1,25 @@
+{
+  "name": "AskapTree",
+  "version": "1.0.0",
+  "description": "Askap hierarchy panel for Grafana",
+  "main": "module.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "grunt": "^0.4.5",
+    "grunt-babel": "^7.0.0",
+    "babel-plugin-transform-es2015-modules-systemjs": "^6.24.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^3.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-execute": "^0.2.2",
+    "grunt-systemjs-builder": "^1.0.0",
+    "load-grunt-tasks": "^3.5.2"
+  }
+}
