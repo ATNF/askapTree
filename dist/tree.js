@@ -1,5 +1,4 @@
-//import * as d3 from './d3'
-
+function makeTree() {
 var treeData =
   {
     "name": "Antenna",
@@ -54,7 +53,7 @@ root.y0 = 0;
 root.children.forEach(collapse);
 
 update(root);
-
+}
 // Collapse the node and all it's children
 function collapse(d) {
   if(d.children) {

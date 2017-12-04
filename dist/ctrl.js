@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', './d3', './tree'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'lodash', './d3', './css/tree.css!', './tree'], function (_export, _context) {
 	"use strict";
 
-	var PanelCtrl, d3, treePanelCtrl;
+	var PanelCtrl, _, d3, treePanelCtrl;
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -38,28 +38,29 @@ System.register(['app/plugins/sdk', './d3', './tree'], function (_export, _conte
 	return {
 		setters: [function (_appPluginsSdk) {
 			PanelCtrl = _appPluginsSdk.PanelCtrl;
+		}, function (_lodash) {
+			_ = _lodash.default;
 		}, function (_d) {
 			d3 = _d;
-		}, function (_tree) {}],
+		}, function (_cssTreeCss) {}, function (_tree) {}],
 		execute: function () {
-			_export('treePanelCtrl', treePanelCtrl = function (_PanelCtrl) {
+			_export('PanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_PanelCtrl) {
 				_inherits(treePanelCtrl, _PanelCtrl);
 
 				function treePanelCtrl($scope, $injector) {
 					_classCallCheck(this, treePanelCtrl);
 
-					var _this = _possibleConstructorReturn(this, (treePanelCtrl.__proto__ || Object.getPrototypeOf(treePanelCtrl)).call(this, $scope, $injector));
-
-					_.defaults(_this.panel, panelDefaults);
-					return _this;
+					return _possibleConstructorReturn(this, (treePanelCtrl.__proto__ || Object.getPrototypeOf(treePanelCtrl)).call(this, $scope, $injector));
 				}
 
 				return treePanelCtrl;
-			}(PanelCtrl));
+			}(PanelCtrl)));
+
+			treePanelCtrl.templateUrl = 'partials/template.html';
 
 			_export('treePanelCtrl', treePanelCtrl);
 
-			treePanelCtrl.templateUrl = 'partials/template.html';
+			_export('PanelCtrl', treePanelCtrl);
 		}
 	};
 });

@@ -3,13 +3,13 @@
 System.register(['./ctrl'], function (_export, _context) {
 	"use strict";
 
-	var TreeCtrl;
+	var treePanelCtrl;
 	return {
 		setters: [function (_ctrl) {
-			TreeCtrl = _ctrl.TreeCtrl;
+			treePanelCtrl = _ctrl.treePanelCtrl;
 		}],
 		execute: function () {
-			_export('PanelCtrl', TreeCtrl);
+			_export('PanelCtrl', treePanelCtrl);
 		}
 	};
 });

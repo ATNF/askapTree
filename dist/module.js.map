@@ -1,1 +1,1 @@
-{"version":3,"sources":["../src/module.js"],"names":["TreeCtrl"],"mappings":";;;;;;;;AAAQA,W,SAAAA,Q;;;wBAGPA,Q","file":"module.js","sourcesContent":["import {TreeCtrl} from './ctrl';\n\nexport {\n\tTreeCtrl as PanelCtrl\n};"]}
+{"version":3,"sources":["../src/module.js"],"names":["treePanelCtrl"],"mappings":";;;;;;;;AAAQA,gB,SAAAA,a;;;wBAGPA,a","file":"module.js","sourcesContent":["import {treePanelCtrl} from './ctrl';\n\nexport {\n\ttreePanelCtrl as PanelCtrl\n};\n"]}

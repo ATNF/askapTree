@@ -1,5 +1,5 @@
-import {TreeCtrl} from './ctrl';
+import {treePanelCtrl} from './ctrl';
 
 export {
-	TreeCtrl as PanelCtrl
+	treePanelCtrl as PanelCtrl
 };
