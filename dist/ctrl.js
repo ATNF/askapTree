@@ -75,9 +75,9 @@ System.register(['app/plugins/sdk', 'lodash', './external/d3.min', './css/tree.c
 					var _this = _possibleConstructorReturn(this, (treePanelCtrl.__proto__ || Object.getPrototypeOf(treePanelCtrl)).call(this, $scope, $injector));
 
 					//		_.defaults(this.panel, panelDefaults);
-					//		this.treeObj = new makeTree(); // Test line
 					_this.panelContainer = null;
 					_this.panel.svgContainer = null;
+					_this.treeObj = null;
 					_this.panel.treeDivId = 'tree_svg_' + _this.panel.id;
 					_this.containerDivId = 'container_' + _this.panel.treeDivId;
 					return _this;
@@ -91,12 +91,13 @@ System.register(['app/plugins/sdk', 'lodash', './external/d3.min', './css/tree.c
 					}
 				}, {
 					key: 'link',
-					value: function link(scope, elem, ctrl) {
+					value: function link(scope, elem) {
 						var treeByClass = elem.find('.grafana-d3-tree');
-						treeByClass.append('<div if="' + ctrl.containerDivId + '"></div>');
+						treeByClass.append('<div if="' + this.containerDivId + '"></div>');
 						var container = treeByClass[0].childNodes[0];
-						ctrl.setContainer(container);
-						ctrl.makeTree();
+						this.setContainer(container);
+						//console.log("Calling makeTree function");
+						this.treeObj = new makeTree(this.panelContainer);
 					}
 				}]);
 
