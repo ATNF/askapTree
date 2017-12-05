@@ -1,20 +1,39 @@
-import {PanelCtrl} from 'app/plugins/sdk';
+import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import _ from 'lodash';
-import * as d3 from './d3'; // Include the d3 library
+import * as d3 from './external/d3.min'; // Include the d3 library
+window.d3 = d3;
+console.log(d3);
 import './css/tree.css!';
-import './tree'; // Include the sample d3 hierarchy code
+import './external/tree'; // Include the sample d3 hierarchy code
 
-class treePanelCtrl extends PanelCtrl {
+class treePanelCtrl extends MetricsPanelCtrl {
 	
 	constructor($scope, $injector) {
 		super($scope, $injector);
 //		_.defaults(this.panel, panelDefaults);
 //		this.treeObj = new makeTree(); // Test line
+		this.panelContainer = null;
+		this.panel.svgContainer = null;
+		this.panel.treeDivId = 'tree_svg_' + this.panel.id;
+		this.containerDivId = 'container_' + this.panel.treeDivId;
+	}
+
+	setContainer(container) {
+		this.panelContainer = container;
+		this.panel.svgContainer = container;
+	}
+
+	link(scope, elem, ctrl) {
+		var treeByClass = elem.find('.grafana-d3-tree');
+		treeByClass.append('<div if="'+ctrl.containerDivId+'"></div>');
+		var container = treeByClass[0].childNodes[0];
+		ctrl.setContainer(container);
+		ctrl.makeTree();
 	}
 }
 
 treePanelCtrl.templateUrl = 'partials/template.html';
 export {
 	treePanelCtrl,
-	treePanelCtrl as PanelCtrl
+	treePanelCtrl as MetricsPanelCtrl
 };

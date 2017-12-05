@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', './d3', './css/tree.css!', './tree'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'lodash', './external/d3.min', './css/tree.css!', './external/tree'], function (_export, _context) {
 	"use strict";
 
-	var PanelCtrl, _, d3, treePanelCtrl;
+	var MetricsPanelCtrl, _, d3, _createClass, treePanelCtrl;
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -37,30 +37,77 @@ System.register(['app/plugins/sdk', 'lodash', './d3', './css/tree.css!', './tree
 
 	return {
 		setters: [function (_appPluginsSdk) {
-			PanelCtrl = _appPluginsSdk.PanelCtrl;
+			MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
 		}, function (_lodash) {
 			_ = _lodash.default;
-		}, function (_d) {
-			d3 = _d;
-		}, function (_cssTreeCss) {}, function (_tree) {}],
+		}, function (_externalD3Min) {
+			d3 = _externalD3Min;
+		}, function (_cssTreeCss) {}, function (_externalTree) {}],
 		execute: function () {
-			_export('PanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_PanelCtrl) {
-				_inherits(treePanelCtrl, _PanelCtrl);
+			_createClass = function () {
+				function defineProperties(target, props) {
+					for (var i = 0; i < props.length; i++) {
+						var descriptor = props[i];
+						descriptor.enumerable = descriptor.enumerable || false;
+						descriptor.configurable = true;
+						if ("value" in descriptor) descriptor.writable = true;
+						Object.defineProperty(target, descriptor.key, descriptor);
+					}
+				}
+
+				return function (Constructor, protoProps, staticProps) {
+					if (protoProps) defineProperties(Constructor.prototype, protoProps);
+					if (staticProps) defineProperties(Constructor, staticProps);
+					return Constructor;
+				};
+			}();
+
+			// Include the d3 library
+			window.d3 = d3;
+			console.log(d3);
+
+			_export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_MetricsPanelCtrl) {
+				_inherits(treePanelCtrl, _MetricsPanelCtrl);
 
 				function treePanelCtrl($scope, $injector) {
 					_classCallCheck(this, treePanelCtrl);
 
-					return _possibleConstructorReturn(this, (treePanelCtrl.__proto__ || Object.getPrototypeOf(treePanelCtrl)).call(this, $scope, $injector));
+					var _this = _possibleConstructorReturn(this, (treePanelCtrl.__proto__ || Object.getPrototypeOf(treePanelCtrl)).call(this, $scope, $injector));
+
+					//		_.defaults(this.panel, panelDefaults);
+					//		this.treeObj = new makeTree(); // Test line
+					_this.panelContainer = null;
+					_this.panel.svgContainer = null;
+					_this.panel.treeDivId = 'tree_svg_' + _this.panel.id;
+					_this.containerDivId = 'container_' + _this.panel.treeDivId;
+					return _this;
 				}
 
+				_createClass(treePanelCtrl, [{
+					key: 'setContainer',
+					value: function setContainer(container) {
+						this.panelContainer = container;
+						this.panel.svgContainer = container;
+					}
+				}, {
+					key: 'link',
+					value: function link(scope, elem, ctrl) {
+						var treeByClass = elem.find('.grafana-d3-tree');
+						treeByClass.append('<div if="' + ctrl.containerDivId + '"></div>');
+						var container = treeByClass[0].childNodes[0];
+						ctrl.setContainer(container);
+						ctrl.makeTree();
+					}
+				}]);
+
 				return treePanelCtrl;
-			}(PanelCtrl)));
+			}(MetricsPanelCtrl)));
 
 			treePanelCtrl.templateUrl = 'partials/template.html';
 
 			_export('treePanelCtrl', treePanelCtrl);
 
-			_export('PanelCtrl', treePanelCtrl);
+			_export('MetricsPanelCtrl', treePanelCtrl);
 		}
 	};
 });

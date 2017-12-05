@@ -16,6 +16,12 @@ module.exports = function(grunt) {
          src: ['**/*', '!**/*.js', '!**/*.scss'],
          dest: 'dist',
        },
+       externals: {
+	 cwd: 'src',
+	 expand: true,
+	 src: ['**/external/*'],
+	 dest: 'dist'
+       },
        pluginDef: {
          expand: true,
          src: [ 'plugin.json', 'README.md' ],
@@ -33,7 +39,7 @@ module.exports = function(grunt) {
 
      babel: {
        options: {
-	 ignore: ['src/tree.js', 'src/d3.js'],
+	 ignore: ['src/external/tree.js', 'src/external/d3.min.js'],
          sourceMap: true,
          presets:  ["es2015"],
          plugins: ['transform-es2015-modules-systemjs', "transform-es2015-for-of"],
@@ -51,5 +57,5 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:pluginDef', 'babel']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:pluginDef', 'babel', 'copy:externals']);
 };
