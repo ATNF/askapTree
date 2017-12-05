@@ -1,31 +1,83 @@
 function makeTree(cont) {
 //console.log("Called Successfully");
+// Initialise the tree with the subsystems to be populated by call to influxDB
 var treeData =
   {
-    "name": "Antenna",
+    "name": "ASKAP",
     "children": [
-      { 
-        "name": "Antenna Power",
+      {
+        "name": "Composite Control",
         "children": [
-          { "name": "power.ant" },
-          { "name": "power.ant.control" },
-          { "name": "power.switchboard" }
+
         ]
       },
       {
-        "name": "Drives",
+        "name": "Antenna",
         "children": [
-          { "name": "servo" },
-          { "name": "servo.axis" },
-          { "name": "servo.coords" }
+          {"name": "Antenna Power"},
+          {"name": "Drives"},
+          {"name": "Timing Common"},
+          {"name": "Timing - LRD"}, 
+          {"name": "Timing - TRD"},
+          {"name": "PAF"},
+          {"name": "Digital Receiver"},
+          {"name": "Beamformer"}
         ]
       },
-      {"name": "Timing Common"},
-      {"name": "Timing - LRD"}, 
-      {"name": "Timing - TRD"},
-      {"name": "PAF"},
-      {"name": "Digital Receiver"},
-      {"name": "Beamformer"}
+      {
+        "name": "Correlator Blocks",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Ingest",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Scheduling Blocks",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Weather",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Rack",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Misc",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Metadata",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Event Log",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Ignore",
+        "children": [
+
+        ]
+      }
     ]
   };
 
