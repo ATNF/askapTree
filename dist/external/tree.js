@@ -1,5 +1,5 @@
 function makeTree(cont) {
-console.log("Called Successfully");
+//console.log("Called Successfully");
 var treeData =
   {
     "name": "Antenna",
@@ -19,8 +19,17 @@ var treeData =
           { "name": "servo.axis" },
           { "name": "servo.coords" }
         ]
-      }
+      },
+      {"name": "Timing Common"},
+      {"name": "Timing - LRD"}, 
+      {"name": "Timing - TRD"},
+      {"name": "PAF"},
+      {"name": "Digital Receiver"},
+      {"name": "Beamformer"}
     ]
+  {
+    "name": "Test"
+  }
   };
 
 // Set the dimensions and margins of the diagram
@@ -100,7 +109,7 @@ function update(source) {
 
   // Add labels for the nodes
   nodeEnter.append('text')
-      .attr("dy", ".35em")
+      .attr("dy", "-1.5em") // Was .35em
       .attr("x", function(d) {
           return d.children || d._children ? -13 : 13;
       })
