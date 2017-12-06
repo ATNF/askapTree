@@ -1,68 +1,187 @@
 function makeTree(cont) {
 //console.log("Called Successfully");
-var treeData =
-  {
-    "name": "Antenna",
-    "children": [
-      { 
-        "name": "Antenna Power",
-        "children": [
-          { "name": "power.ant" },
-          { "name": "power.ant.control" },
-          { "name": "power.switchboard" }
+// Initialise the tree with the subsystems to be populated by call to influxDB
+
+$.ajax( {
+	method: 'GET',
+	url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
+	type: 'POST',
+	//data: { db:'askap', q:'show tag values from "metadata.toc" with key = level1' },
+	data: { db: 'askap', q:'show series from "metadata.toc"'},
+	datatype: 'json'
+}).done(function(result) { 
+	//window.l1 = result;
+	window.treeData = {
+		"name": "ASKAP",
+		"children": []
+	};
+	var map = result["results"][0]["series"][0]["values"];
+	var len = map.length;
+	var tempStrings;
+	var tempObj;
+	var names = [];
+	var nodeName;
+	var madeNode = false;
+
+	// Maybe make an array of all of the names that have been assigned nodes to avoid double ups.
+	for(var i = 0; i<len; i++) {
+		tempStrings = result["results"][0]["series"][0]["values"][i][0].split(",");
+		if(tempStrings.length == 5) { // Indicates that the description has been included in the metadata
+			nodeName = tempStrings[2].split("level1=")[1];
+			madeNode = check(names, nodeName);
+			if(!madeNode) {
+				tempObj = new Object();
+				tempObj.name = nodeName;
+				tempObj.children = [];
+				names.push(tempObj.name);
+				treeData["children"].push(tempObj);
+			}
+		}
+		else { // TODO: Modulate this in a function
+			nodeName = tempStrings[1].split("level1=")[1];
+			madeNode = check(names, nodeName);
+			if(!madeNode) {
+				tempObj = new Object();
+				tempObj.name = nodeName;
+				tempObj.children = [];
+				names.push(tempObj.name);
+				treeData["children"].push(tempObj);
+			}
+		}
+	}
+
+
+	var margin = {top: 20, right: 90, bottom: 30, left: 90},
+	    width = 960 - margin.left - margin.right,
+	    height = 500 - margin.top - margin.bottom;
+
+	// append the svg object to the body of the page
+	// appends a 'group' element to 'svg'
+	// moves the 'group' element to the top left margin
+	window.svg = d3.select(cont).append("svg")
+	    .attr("width", width + margin.right + margin.left)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate("
+		  + margin.left + "," + margin.top + ")");
+
+	window.i = 0,
+	    duration = 750,
+	    window.root;
+
+	// declares a tree layout and assigns the size
+	window.treemap = d3.tree().size([height, width]);
+
+	// Assigns parent, children, height, depth
+	root = d3.hierarchy(treeData, function(d) { return d.children; });
+	root.x0 = height / 2;
+	root.y0 = 0;
+
+	// Collapse after the second level
+	//root.children.forEach(collapse);
+
+	update(root);
+		
+});
+		
+	/*	
+	var treeData =
+	  {
+	    "name": "ASKAP",
+	    "children": [
+	      {
+		"name": "Composite Control",
+		"children": [
+
+		]
+	      },
+	      {
+		"name": "Antenna",
+		"children": [
+		  {"name": "Antenna Power"},
+		  {"name": "Drives"},
+		  {"name": "Timing Common"},
+		  {"name": "Timing - LRD"}, 
+		  {"name": "Timing - TRD"},
+		  {"name": "PAF"},
+		  {"name": "Digital Receiver"},
+		  {"name": "Beamformer"}
         ]
       },
       {
-        "name": "Drives",
+        "name": "Correlator Blocks",
         "children": [
-          { "name": "servo" },
-          { "name": "servo.axis" },
-          { "name": "servo.coords" }
+
         ]
       },
-      {"name": "Timing Common"},
-      {"name": "Timing - LRD"}, 
-      {"name": "Timing - TRD"},
-      {"name": "PAF"},
-      {"name": "Digital Receiver"},
-      {"name": "Beamformer"}
+      {
+        "name": "Ingest",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Scheduling Blocks",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Weather",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Rack",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Misc",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Metadata",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Event Log",
+        "children": [
+
+        ]
+      },
+      {
+        "name": "Ignore",
+        "children": [
+
+        ]
+      }
     ]
-  {
-    "name": "Test"
-  }
   };
+*/
+//console.log(treeData);
 
 // Set the dimensions and margins of the diagram
-var margin = {top: 20, right: 90, bottom: 30, left: 90},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+}
 
-// append the svg object to the body of the page
-// appends a 'group' element to 'svg'
-// moves the 'group' element to the top left margin
-window.svg = d3.select(cont).append("svg")
-    .attr("width", width + margin.right + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate("
-          + margin.left + "," + margin.top + ")");
+function check(names, nodeName) {
+	var madeNode = false;
+	var i = 0;
 
-window.i = 0,
-    duration = 750,
-    window.root;
-
-// declares a tree layout and assigns the size
-window.treemap = d3.tree().size([height, width]);
-
-// Assigns parent, children, height, depth
-root = d3.hierarchy(treeData, function(d) { return d.children; });
-root.x0 = height / 2;
-root.y0 = 0;
-
-// Collapse after the second level
-root.children.forEach(collapse);
-
-update(root);
+	for(i = 0; i<names.length; i++) {
+		if(names[i] == nodeName) {
+			madeNode = true;
+		}
+		else {}
+	}
+//	console.log(madeNode);
+	return(madeNode);
 }
 // Collapse the node and all it's children
 function collapse(d) {
@@ -109,7 +228,7 @@ function update(source) {
 
   // Add labels for the nodes
   nodeEnter.append('text')
-      .attr("dy", "-1.5em") // Was .35em
+      .attr("dy", ".35em") // Was .35em
       .attr("x", function(d) {
           return d.children || d._children ? -13 : 13;
       })

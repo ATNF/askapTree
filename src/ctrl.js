@@ -1,5 +1,6 @@
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import _ from 'lodash';
+import $ from 'jquery';
 import * as d3 from './external/d3.min'; // Include the d3 library
 window.d3 = d3;
 console.log(d3);

@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', './external/d3.min', './css/tree.css!', './external/tree'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './css/tree.css!', './external/tree'], function (_export, _context) {
 	"use strict";
 
-	var MetricsPanelCtrl, _, d3, _createClass, treePanelCtrl;
+	var MetricsPanelCtrl, _, $, d3, _createClass, treePanelCtrl;
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -40,6 +40,8 @@ System.register(['app/plugins/sdk', 'lodash', './external/d3.min', './css/tree.c
 			MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
 		}, function (_lodash) {
 			_ = _lodash.default;
+		}, function (_jquery) {
+			$ = _jquery.default;
 		}, function (_externalD3Min) {
 			d3 = _externalD3Min;
 		}, function (_cssTreeCss) {}, function (_externalTree) {}],
