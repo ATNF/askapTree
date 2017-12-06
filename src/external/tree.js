@@ -19,38 +19,73 @@ $.ajax( {
 	var len = map.length;
 	var tempStrings;
 	var tempObj;
-	var names = [];
-	var nodeName;
+	var l1names = [];
+	var l2names = [];
+	var l1nodeName;
+	var l2nodeName;
 	var madeNode = false;
+	var loc = 0;
 
 	// Maybe make an array of all of the names that have been assigned nodes to avoid double ups.
 	for(var i = 0; i<len; i++) {
 		tempStrings = result["results"][0]["series"][0]["values"][i][0].split(",");
 		if(tempStrings.length == 5) { // Indicates that the description has been included in the metadata
-			nodeName = tempStrings[2].split("level1=")[1];
-			madeNode = check(names, nodeName);
+			l1nodeName = tempStrings[2].split("level1=")[1];
+			l2nodeName = tempStrings[3].split("level2=")[1];
+			madeNode = check(l1names, l1nodeName);
 			if(!madeNode) {
 				tempObj = new Object();
-				tempObj.name = nodeName;
+				tempObj.name = l1nodeName;
 				tempObj.children = [];
-				names.push(tempObj.name);
+				l1names.push(tempObj.name);
 				treeData["children"].push(tempObj);
+			}
+			for(var j=0; j<treeData["children"].length; j++) {
+				if(treeData["children"][j]["name"] == l1nodeName) {
+					loc = j;
+				}
+			}
+			madeNode = checkChildren(treeData["children"][loc], l2nodeName);
+			if(!madeNode) {
+				// Cycle through node names to find the lvl 1 parents location
+				tempObj = new Object();
+				tempObj.name = l2nodeName;
+				tempObj.children = [];
+				l2names.push(tempObj.name);
+				treeData["children"][loc]["children"].push(tempObj);
+				loc = 0;
 			}
 		}
 		else { // TODO: Modulate this in a function
-			nodeName = tempStrings[1].split("level1=")[1];
-			madeNode = check(names, nodeName);
+			l1nodeName = tempStrings[1].split("level1=")[1];
+			l2nodeName = tempStrings[2].split("level2=")[1];
+			madeNode = check(l1names, l1nodeName);
 			if(!madeNode) {
 				tempObj = new Object();
-				tempObj.name = nodeName;
+				tempObj.name = l1nodeName;
 				tempObj.children = [];
-				names.push(tempObj.name);
+				l1names.push(tempObj.name);
 				treeData["children"].push(tempObj);
 			}
+			for(var j=0; j<treeData["children"].length; j++) {
+				if(treeData["children"][j]["name"] == l1nodeName) {
+					loc = j;
+				}
+			}
+			madeNode = checkChildren(treeData["children"][loc], l2nodeName);
+			if(!madeNode) {
+				// Cycle through node names to find the lvl 1 parents location
+				tempObj = new Object();
+				tempObj.name = l2nodeName;
+				tempObj.children = [];
+				l2names.push(tempObj.name);
+				treeData["children"][loc]["children"].push(tempObj);
+				loc = 0;
+			}
+
 		}
+
 	}
-
-
 	var margin = {top: 20, right: 90, bottom: 30, left: 90},
 	    width = 960 - margin.left - margin.right,
 	    height = 500 - margin.top - margin.bottom;
@@ -78,7 +113,7 @@ $.ajax( {
 	root.y0 = 0;
 
 	// Collapse after the second level
-	//root.children.forEach(collapse);
+	root.children.forEach(collapse);
 
 	update(root);
 		
@@ -181,6 +216,19 @@ function check(names, nodeName) {
 		else {}
 	}
 //	console.log(madeNode);
+	return(madeNode);
+}
+
+function checkChildren(children, nodeName) {
+	var madeNode = false;
+	var i = 0;
+
+	for(i=0; i<children["children"].length; i++) {
+		if(children["children"][i]["name"] == nodeName) {
+			madeNode = true;
+		}
+	}
+
 	return(madeNode);
 }
 // Collapse the node and all it's children
