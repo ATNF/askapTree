@@ -1,7 +1,7 @@
 function makeTree(cont) {
 //console.log("Called Successfully");
 // Initialise the tree with the subsystems to be populated by call to influxDB
-
+// TODO: Clean up node strings to get rid of the \ char
 $.ajax( {
 	method: 'GET',
 	url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
@@ -25,6 +25,7 @@ $.ajax( {
 	var l2nodeName;
 	var madeNode = false;
 	var loc = 0;
+	var locL2 = 0;
 
 	// Maybe make an array of all of the names that have been assigned nodes to avoid double ups.
 	for(var i = 0; i<len; i++) {
@@ -32,10 +33,11 @@ $.ajax( {
 		if(tempStrings.length == 5) { // Indicates that the description has been included in the metadata
 			l1nodeName = tempStrings[2].split("level1=")[1];
 			l2nodeName = tempStrings[3].split("level2=")[1];
+			measurement = tempStrings[4].split("measurement=")[1];
 			madeNode = check(l1names, l1nodeName);
 			if(!madeNode) {
 				tempObj = new Object();
-				tempObj.name = l1nodeName;
+				tempObj.name = l1nodeName;//.replace("\\", "");
 				tempObj.children = [];
 				l1names.push(tempObj.name);
 				treeData["children"].push(tempObj);
@@ -49,20 +51,20 @@ $.ajax( {
 			if(!madeNode) {
 				// Cycle through node names to find the lvl 1 parents location
 				tempObj = new Object();
-				tempObj.name = l2nodeName;
+				tempObj.name = l2nodeName;//.replace("\\", "");
 				tempObj.children = [];
 				l2names.push(tempObj.name);
-				treeData["children"][loc]["children"].push(tempObj);
-				loc = 0;
-			}
+				locL2 = treeData["children"][loc]["children"].push(tempObj);	
+			}	
 		}
 		else { // TODO: Modulate this in a function
 			l1nodeName = tempStrings[1].split("level1=")[1];
 			l2nodeName = tempStrings[2].split("level2=")[1];
+			measurement = tempStrings[3].split("measurement=")[1];
 			madeNode = check(l1names, l1nodeName);
 			if(!madeNode) {
 				tempObj = new Object();
-				tempObj.name = l1nodeName;
+				tempObj.name = l1nodeName;//.replace("\\", "");
 				tempObj.children = [];
 				l1names.push(tempObj.name);
 				treeData["children"].push(tempObj);
@@ -76,14 +78,24 @@ $.ajax( {
 			if(!madeNode) {
 				// Cycle through node names to find the lvl 1 parents location
 				tempObj = new Object();
-				tempObj.name = l2nodeName;
+				tempObj.name = l2nodeName;//.replace("\\", "");
 				tempObj.children = [];
 				l2names.push(tempObj.name);
 				treeData["children"][loc]["children"].push(tempObj);
-				loc = 0;
 			}
 
 		}
+		// Finds the location of the correct place to push the measurement name to
+		for(var j=0; j<treeData["children"][loc]["children"].length; j++) {
+			if(treeData["children"][loc]["children"][j]["name"] == l2nodeName) {
+				locL2 = j;
+			}
+		}
+		tempObj = new Object();
+		tempObj.name = measurement;
+		treeData["children"][loc]["children"][locL2]["children"].push(tempObj);
+		loc = 0;
+		locL2 = 0;
 
 	}
 	var margin = {top: 20, right: 90, bottom: 30, left: 90},
