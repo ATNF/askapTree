@@ -2,9 +2,12 @@
 
 This panel plugin for Grafana allows the user to graphically drill down to the exact measurement point desired in the ASKAP influxDB database. It is intended to be used with scripted dashboards, and hence a node with no sprouting children will link to a scripted dashboard to view the desired measurement.
 
+## Functionality
+
+The panel currently upon startup uses a jquery request to grab the metadata for the tag values of the ASKAP array. With this, it generates three levels of nodes, allowing the user to drill down to a measurement. It then uses another jquery request to grab all the field key values for the measurements, allowing the user to select the field key to plot. As the nodes are dynamically allocated, as elements change in the database, so too will the hierarchy.
+
 ## To Be Implemented:
 
-* Dynamically allocate child nodes to the corresponding parent as a result of a call to influxDB upon rendering the panel.
 * Implement linking to scripted dashboard on lowest node click.
 * Add editor tab to customise look of tree.
 
