@@ -23,6 +23,7 @@ $.ajax( {
 	var l2names = [];
 	var l1nodeName;
 	var l2nodeName;
+	var description = null;
 	var madeNode = false;
 	var loc = 0;
 	var locL2 = 0;
@@ -31,8 +32,9 @@ $.ajax( {
 	for(var i = 0; i<len; i++) {
 		tempStrings = result["results"][0]["series"][0]["values"][i][0].split(",");
 		if(tempStrings.length == 5) { // Indicates that the description has been included in the metadata
-			l1nodeName = tempStrings[2].split("level1=")[1];
-			l2nodeName = tempStrings[3].split("level2=")[1];
+			l1nodeName = tempStrings[2].split("level1=")[1].replace("\\", "").replace("\\ ", " ");
+			l2nodeName = tempStrings[3].split("level2=")[1].replace("\\", "").replace("\\ ", " ");
+			description = tempStrings[1].split("desc=")[1].replace("\\", "").replace("\\ ", " ");
 			measurement = tempStrings[4].split("measurement=")[1];
 			madeNode = check(l1names, l1nodeName);
 			if(!madeNode) {
@@ -58,8 +60,8 @@ $.ajax( {
 			}	
 		}
 		else { // TODO: Modulate this in a function
-			l1nodeName = tempStrings[1].split("level1=")[1];
-			l2nodeName = tempStrings[2].split("level2=")[1];
+			l1nodeName = tempStrings[1].split("level1=")[1].replace("\\", "").replace("\\ ", " ");
+			l2nodeName = tempStrings[2].split("level2=")[1].replace("\\", "").replace("\\ ", " ");
 			measurement = tempStrings[3].split("measurement=")[1];
 			madeNode = check(l1names, l1nodeName);
 			if(!madeNode) {
@@ -92,10 +94,16 @@ $.ajax( {
 			}
 		}
 		tempObj = new Object();
-		tempObj.name = measurement;
+		if(description != null) {
+			tempObj.name = description + " ("+measurement+")";
+		}
+		else {
+			tempObj.name = measurement;
+		}
 		treeData["children"][loc]["children"][locL2]["children"].push(tempObj);
 		loc = 0;
 		locL2 = 0;
+		description = null;
 
 	}
 	var margin = {top: 20, right: 90, bottom: 30, left: 90},
