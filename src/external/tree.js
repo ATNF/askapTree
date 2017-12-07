@@ -27,9 +27,13 @@ $.ajax( {
 	var madeNode = false;
 	var loc = 0;
 	var locL2 = 0;
+	var locMeas = 0;
 
 	// Maybe make an array of all of the names that have been assigned nodes to avoid double ups.
 	for(var i = 0; i<len; i++) {
+		loc = 0;
+		locL2 = 0;
+		description = null;
 		tempStrings = result["results"][0]["series"][0]["values"][i][0].split(",");
 		if(tempStrings.length == 5) { // Indicates that the description has been included in the metadata
 			l1nodeName = tempStrings[2].split("level1=")[1].replace("\\", "").replace("\\ ", " ");
@@ -100,128 +104,44 @@ $.ajax( {
 		else {
 			tempObj.name = measurement;
 		}
-		treeData["children"][loc]["children"][locL2]["children"].push(tempObj);
-		loc = 0;
-		locL2 = 0;
-		description = null;
-
+		tempObj.children = [];
+		locMeas = treeData["children"][loc]["children"][locL2]["children"].push(tempObj);
+		getField(measurement, loc, locL2, locMeas-1);
 	}
-	var margin = {top: 20, right: 90, bottom: 30, left: 90},
-	    width = 960 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
+	$( document ).ajaxStop( function() {		
+		var margin = {top: 20, right: 90, bottom: 30, left: 90},
+		    width = 960 - margin.left - margin.right,
+		    height = 500 - margin.top - margin.bottom;
 
-	// append the svg object to the body of the page
-	// appends a 'group' element to 'svg'
-	// moves the 'group' element to the top left margin
-	window.svg = d3.select(cont).append("svg")
-	    .attr("width", width + margin.right + margin.left)
-	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
-	    .attr("transform", "translate("
-		  + margin.left + "," + margin.top + ")");
+		// append the svg object to the body of the page
+		// appends a 'group' element to 'svg'
+		// moves the 'group' element to the top left margin
+		window.svg = d3.select(cont).append("svg")
+		    .attr("width", width + margin.right + margin.left)
+		    .attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+		    .attr("transform", "translate("
+			  + margin.left + "," + margin.top + ")");
 
-	window.i = 0,
-	    duration = 750,
-	    window.root;
+		window.i = 0,
+		    duration = 750,
+		    window.root;
 
-	// declares a tree layout and assigns the size
-	window.treemap = d3.tree().size([height, width]);
+		// declares a tree layout and assigns the size
+		window.treemap = d3.tree().size([height, width]);
 
-	// Assigns parent, children, height, depth
-	root = d3.hierarchy(treeData, function(d) { return d.children; });
-	root.x0 = height / 2;
-	root.y0 = 0;
+		// Assigns parent, children, height, depth
+		root = d3.hierarchy(treeData, function(d) { return d.children; });
+		root.x0 = height / 2;
+		root.y0 = 0;
 
-	// Collapse after the second level
-	root.children.forEach(collapse);
+		// Collapse after the second level
+		root.children.forEach(collapse);
 
-	update(root);
-		
+		update(root);
+	});	
 });
 		
-	/*	
-	var treeData =
-	  {
-	    "name": "ASKAP",
-	    "children": [
-	      {
-		"name": "Composite Control",
-		"children": [
-
-		]
-	      },
-	      {
-		"name": "Antenna",
-		"children": [
-		  {"name": "Antenna Power"},
-		  {"name": "Drives"},
-		  {"name": "Timing Common"},
-		  {"name": "Timing - LRD"}, 
-		  {"name": "Timing - TRD"},
-		  {"name": "PAF"},
-		  {"name": "Digital Receiver"},
-		  {"name": "Beamformer"}
-        ]
-      },
-      {
-        "name": "Correlator Blocks",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Ingest",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Scheduling Blocks",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Weather",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Rack",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Misc",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Metadata",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Event Log",
-        "children": [
-
-        ]
-      },
-      {
-        "name": "Ignore",
-        "children": [
-
-        ]
-      }
-    ]
-  };
-*/
-//console.log(treeData);
-
 // Set the dimensions and margins of the diagram
 }
 
@@ -251,6 +171,33 @@ function checkChildren(children, nodeName) {
 
 	return(madeNode);
 }
+
+function getField(measurement, loc, locL2, locMeas) {
+	$.ajax( {
+		method: 'GET',
+		url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
+		type: 'POST',
+		data: { db: 'askap', q:'show field keys from "'+measurement+'"'},
+		datatype: 'json'
+	}).done(function(result) {
+		// Grab the field key data to append to the measurement name
+/*		console.log("MEASUREMENT NAME: "+measurement);
+		console.log(field);*/
+//		console.log(measurement);
+//		console.log(result);
+		var tempObj = null;
+		if(!(result["results"][0]["series"] == undefined)) {
+			var field = result["results"][0]["series"][0]["values"];
+
+			for(i=0; i<field.length; i++) {
+				tempObj = new Object();
+				tempObj.name = field[i][0];
+				treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
+			}
+		}
+	});
+}
+
 // Collapse the node and all it's children
 function collapse(d) {
   if(d.children) {
