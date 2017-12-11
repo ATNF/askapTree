@@ -176,10 +176,10 @@ $.ajax( {
 		root.children.forEach(collapse);
 
 		update(root);
-
+/*
 		for(i=0; i<(treeData["children"][0]["children"][3]["children"][7]["children"].length); i++) {
 				console.log(treeData["children"][0]["children"][3]["children"][7]["children"][i]["name"]);
-		}
+		}*/
 	});	
 });
 		
@@ -393,13 +393,22 @@ function update(source) {
 
   // Toggle children on click.
   function click(d) {
-    if (d.children) {
+    if (d.children) { // If the node has already been clicked and the children sprouted
         d._children = d.children;
         d.children = null;
-      } else {
+      } else { // If the node has not been clicked yet	
         d.children = d._children;
         d._children = null;
+	if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
+	//	window.alert("No Children");
+		//window.alert(d["data"]["name"]);
+		launchDash(d["data"]["name"]);
+	}
       }
     update(d);
   }
+}
+
+function launchDash(pvname) {
+	window.open("http://akingest01:3000/dashboard/script/pvplot.js?pvname=ak03:paf:ctrl:adc1:pafAvTemp");
 }
