@@ -1,7 +1,7 @@
 function makeTree(cont) {
 //console.log("Called Successfully");
 // Initialise the tree with the subsystems to be populated by call to influxDB
-// TODO: Clean up node strings to get rid of the \ char
+// TODO: Make class for the tempObj vars that contain children predefined
 $.ajax( {
 	method: 'GET',
 	url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
@@ -99,19 +99,56 @@ $.ajax( {
 		}
 		tempObj = new Object();
 		if(description != null) {
-			tempObj.name = description + " ("+measurement+")";
+			tempObj.name = description;// + " ("+measurement+")";
 		}
 		else {
 			tempObj.name = measurement;
 		}
 		tempObj.children = [];
 		locMeas = treeData["children"][loc]["children"][locL2]["children"].push(tempObj);
+		
+		// If measurement is ade.paf.temps, need to allocate two more lists on the next level to break up large amount of data
+		if(measurement == "ade.paf.temps") {
+			tempObj = new Object();
+			tempObj.name = "List 1";
+			tempObj.children = [];
+			treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+			tempObj = new Object();
+			tempObj.name = "List 2";
+			tempObj.children = [];
+			treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+		}
+
+		// TODO: If measurement is ade.paf.status, need to allocate a list for errorCount
+		if(measurement == "ade.paf.status") {
+			tempObj = new Object();
+			tempObj.name = "Error Count";
+			tempObj.children = [];
+			treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+		}
+
 		getField(measurement, loc, locL2, locMeas-1);
+		
+		measurement = null;
+		loc = 0;
+		locL2 = 0;
+		locMeas = 0;
+
+		// TODO: Trim the bloat fields in the PAF status tag
+/*		var strCheck = null;
+
+		for(i=0; i<(treeData["children"][0]["children"][3]["children"][7]["children"].length); i++) {
+				strCheck = treeData["children"][0]["children"][3]["children"][7]["children"][i]["name"];
+
+				if(strCheck.search("Enabled") != -1) {
+							treeData["children"][0]["children"][3]["children"][7]["children"].splice(i, 1);
+				}
+		}*/
 	}
 	$( document ).ajaxStop( function() {		
 		var margin = {top: 20, right: 90, bottom: 30, left: 90},
-		    width = 960 - margin.left - margin.right,
-		    height = 500 - margin.top - margin.bottom;
+		    width = window.innerWidth - margin.left - margin.right, //960
+		    height = window.innerHeight - margin.top - margin.bottom; //1000
 
 		// append the svg object to the body of the page
 		// appends a 'group' element to 'svg'
@@ -139,6 +176,10 @@ $.ajax( {
 		root.children.forEach(collapse);
 
 		update(root);
+
+		for(i=0; i<(treeData["children"][0]["children"][3]["children"][7]["children"].length); i++) {
+				console.log(treeData["children"][0]["children"][3]["children"][7]["children"][i]["name"]);
+		}
 	});	
 });
 		
@@ -181,10 +222,6 @@ function getField(measurement, loc, locL2, locMeas) {
 		datatype: 'json'
 	}).done(function(result) {
 		// Grab the field key data to append to the measurement name
-/*		console.log("MEASUREMENT NAME: "+measurement);
-		console.log(field);*/
-//		console.log(measurement);
-//		console.log(result);
 		var tempObj = null;
 		if(!(result["results"][0]["series"] == undefined)) {
 			var field = result["results"][0]["series"][0]["values"];
@@ -192,13 +229,32 @@ function getField(measurement, loc, locL2, locMeas) {
 			for(i=0; i<field.length; i++) {
 				tempObj = new Object();
 				tempObj.name = field[i][0];
-				treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
+				// If the name of the field being read contains dom or tec, seperate it into list 1. else, put into list 2
+				if(measurement == "ade.paf.temps") {
+					if((tempObj.name.search("dom") != -1) || (tempObj.name.search("tec") != -1)) { // The field being appended is either dom or tec
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][0]["children"].push(tempObj);
+					} 
+					else {
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][1]["children"].push(tempObj);
+					}
+				} else if(measurement == "ade.paf.status") {
+					// Need to append every field with the string errorCount in it into a seperate node
+					if(tempObj.name.search("errorCount") != -1) {
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][0]["children"].push(tempObj);
+					} else if((tempObj.name.search("tatus") == -1) && (tempObj.name.search("nabled") == -1) && (tempObj.name.search("isabled") == -1)) {
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
+					}
+
+				}
+				else {
+					treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
+				}
 			}
 		}
 	});
 }
 
-// Collapse the node and all it's children
+// Collapse the node and all its children
 function collapse(d) {
   if(d.children) {
     d._children = d.children

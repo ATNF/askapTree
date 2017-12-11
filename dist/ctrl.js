@@ -66,7 +66,7 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
 
 			// Include the d3 library
 			window.d3 = d3;
-			console.log(d3);
+			//console.log(d3);
 
 			_export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_MetricsPanelCtrl) {
 				_inherits(treePanelCtrl, _MetricsPanelCtrl);
