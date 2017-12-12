@@ -116,6 +116,12 @@ function makeTree(cont) {
 				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
 				tempObj = newNode("FEC-EO");
 				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+				tempObj = newNode("PAF Controller");
+				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+				tempObj = newNode("PAF Power Supply");
+				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+				tempObj = newNode("TEC Controller");
+				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
 			}
 
 			getField(measurement, loc, locL2, locMeas-1); // Passes control to a function to grab the field keys from the database and append it to the correct location
@@ -245,6 +251,15 @@ function getField(measurement, loc, locL2, locMeas) {
 						// Push the object to the FecEoInfo child node
 						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][1]["children"].push(tempObj);
 					// If none of the above apply, append to the root of the parent if various strings aren't included.
+					} else if(tempObj.name.search("ctrl_") != -1) {
+						// Push the object to the PAF Controller child node
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][2]["children"].push(tempObj); 
+					} else if(tempObj.name.search("psu_") != -1) {
+						// Push the object to the PAF Power Supply child node
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][3]["children"].push(tempObj);
+					} else if(tempObj.name.search("tec_") != -1) {
+						// Push the object to the TEC Controller child node
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][4]["children"].push(tempObj);
 					} else if((tempObj.name.search("tatus") == -1) && (tempObj.name.search("nabled") == -1) && (tempObj.name.search("isabled") == -1)) {
 						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
 					}
