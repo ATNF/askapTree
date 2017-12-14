@@ -10,14 +10,14 @@ The panel currently upon startup uses a jquery request to grab the metadata for 
 
 * Implement jquery request in the scripted dashboard file to grab all of the tag keys associated with the measurement.
 * Add editor tab to customise look of tree.
-* Create a shell script to move the scripted dashboard file to the public/dashboards directory in the users Grafana installation.
 
 ## Usage
 
-* Navigate into src/externals and open tree.js in your text editor. At the end of the file, the Grafana port number will need to be changed to the port number the user specified in their Grafana installation.
+* Navigate into src/externals and open tree.js in your text editor. At the end of the file, the Grafana port number will need to be changed to the port number the user specified in their Grafana installation. Following this, run grunt in the root directory to move everything over to the dist directory.
+* The file askapMonitor.js is used for generating the scripted dashboard specified by clicking the lowest leaf node in the hierarchy. In order to launch, the js file needs to be moved to the Grafana installation directory, placed in public/dashboards/.
 
-#### Acknowledgments
+## Acknowledgments
 
-This plugin heavily relies on code from the following d3 example:
+This plugin relies on source code from the following d3 example:
 
 * https://bl.ocks.org/d3noob/43a860bc0024792f8803bba8ca0d5ecd#index.html

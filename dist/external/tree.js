@@ -124,6 +124,14 @@ function makeTree(cont) {
 				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
 			}
 
+			// If measurement is power.ant, need to allocate multiple sub groups to break up large amount of data.
+			if(measurement == "power.ant") {
+				tempObj = newNode("Min");
+				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+				tempObj = newNode("Max");
+				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
+			}
+
 			getField(measurement, loc, locL2, locMeas-1); // Passes control to a function to grab the field keys from the database and append it to the correct location
 			
 			// Reset variables to recycle for next loop iteration.
@@ -135,7 +143,7 @@ function makeTree(cont) {
 		// The following section of code only runs once all of the jquery requests for the page have ceased. This ensures all the data requred for the tree has been collected
 		// before it continues to actually make the tree.
 		$( document ).ajaxStop( function() {		
-			var margin = {top: 20, right: 90, bottom: 30, left: 90},
+			var margin = {top: 20, right: 90, bottom: 30, left: 90}, //20
 			    width = window.innerWidth - margin.left - margin.right, //960
 			    height = window.innerHeight - margin.top - margin.bottom; //1000
 
@@ -154,7 +162,7 @@ function makeTree(cont) {
 			    window.root;
 
 			// declares a tree layout and assigns the size
-			window.treemap = d3.tree().size([height, width]);
+			window.treemap = d3.tree().size([height-30, width]);
 
 			// Assigns parent, children, height, depth
 			root = d3.hierarchy(treeData, function(d) { return d.children; });
@@ -240,7 +248,7 @@ function getField(measurement, loc, locL2, locMeas) {
 					else {
 						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][1]["children"].push(tempObj);
 					}
-				// If the measurement name is ade.paf.status, need to push leafs to differernt locations than normal
+				// If the measurement name is ade.paf.status, need to push leafs to different locations than normal
 				} else if(measurement == "ade.paf.status") {
 					// Append every field with the string "errorCount" in it into a seperate node
 					if(tempObj.name.search("errorCount") != -1) {
@@ -263,7 +271,15 @@ function getField(measurement, loc, locL2, locMeas) {
 					} else if((tempObj.name.search("tatus") == -1) && (tempObj.name.search("nabled") == -1) && (tempObj.name.search("isabled") == -1)) {
 						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
 					}
-
+				// If the measyremet name is power.ant, need to push leafs to a different locations than normal
+				} else if(measurement == "power.ant") {
+					if(tempObj.name.search("min") != -1) {
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][0]["children"].push(tempObj);
+					} else if(tempObj.name.search("max") != -1) {
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"][1]["children"].push(tempObj);
+					} else {
+						treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
+					}
 				}
 				// If no special allocation needs to take place, allocate child nodes as normal.
 				else {
