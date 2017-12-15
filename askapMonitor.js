@@ -52,6 +52,7 @@ return function(callback) {
   var pointRadius = 1;
   var tagKeys = "";
   var dropDown;
+  var aliasString = ""; // Used to store the aliases for the tag keys pushed to the dashboard
  
   if(!_.isUndefined(ARGS.meas)) {
     meas = ARGS.meas;
@@ -60,7 +61,7 @@ return function(callback) {
   if(!_.isUndefined(ARGS.field)) {
     field = ARGS.field;
   }
-  console.log(ARGS);
+
 /* 
       if (antenna.length == 0) {
           // single antenna by default
@@ -75,18 +76,27 @@ return function(callback) {
 */ 
       groupBy.push({"params": [ "$ti" ], "type": "time" });
 
-      // setup templates
+$.ajax( {
+		method: 'GET',
+		url: "http://akingest01.atnf.csiro.au:5000/influx?",
+		type: 'POST',
+		data: { measurement: meas, field: field},
+		datatype: 'json'
+	}).done(function(result) {
+
+/*      // setup templates
 $.ajax( {
 		method: 'GET',
 		url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
 		type: 'POST',
 		data: { db: 'askap', q:'show tag keys from "'+meas+'"'},
 		datatype: 'json'
-	}).done(function(result) {
+	}).done(function(result) {*/
 
 // TODO: Indent this, needs a cleanup
 //console.log(result);
-tagKeys = result["results"][0]["series"][0]["values"];
+//tagKeys = result["results"][0]["series"][0]["values"];
+tagKeys = result["tags"];
 dashboard.templating = { "list": [
       {
 	"auto": true,
@@ -176,8 +186,8 @@ dashboard.hideControls = true;
 for(var i=0; i<tagKeys.length; i++) {
 	//console.log(tagKeys[i][0]);
 	if(!(tagKeys[i][0].includes("?"))) {
-		dropDown = dropDownGen(tagKeys[i][0], meas, i);
-		console.log(dropDown);
+		dropDown = dropDownGen(tagKeys[i], meas, i);
+		//console.log(dropDown);
 		dashboard.templating.list.push (dropDown[0]);
 		tags.push (dropDown[1]);
 		groupBy.push (dropDown[2]);
@@ -255,7 +265,7 @@ dashboard.rows.push({
       "steppedLine": false,
       "targets": [
 	{
-	  //"alias" : "Ambient Temp",
+	  "alias" : "", // Populate this field later
 	  "dsType": "influxdb",
 	  "groupBy": groupBy,
 	  "measurement": meas,
@@ -282,7 +292,7 @@ dashboard.rows.push({
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": field,
+      "title": result["desc"],
       "tooltip": {
 	"msResolution": true,
 	"shared": true,
@@ -299,7 +309,7 @@ dashboard.rows.push({
       "yaxes": [
 	{
 	  "format": format,
-	  "label": null,
+	  "label": result["units"],
 	  "logBase": 1,
 	  "max": null,
 	  "min": null,
@@ -323,6 +333,17 @@ dashboard.rows.push({
   "title": "Row",
   "titleSize": "h6",
 });
+
+// Make a comma seperated string for the tag aliases to increase readability of the plot
+for(i=0; i<tagKeys.length; i++) {
+	aliasString += "[[tag_"+tagKeys[i]+"]]";
+	
+	if(i != (tagKeys.length-1)) {
+		aliasString += ", ";	
+	}
+}
+
+dashboard.rows[0]["panels"][0]["targets"][0].alias = aliasString;
 
 callback(dashboard);
 }).fail(function(result) {
@@ -385,7 +406,7 @@ function dropDownGen(key, meas, i) {
 	];
 
 	if(i != 0) {
-		retVal[1].condition = "OR";
+		retVal[1].condition = "AND";
 	}
 	//console.log(retVal);
 	return retVal;
