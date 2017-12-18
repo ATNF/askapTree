@@ -453,6 +453,7 @@ function update(source) {
 
 // launchDash takes in two variables - the name of the field, and the name of the measurement. These variables are used to create a scripted dashboard URL, which the user is
 // then linked to.
+
 function launchDash(field, meas, type) {
 	window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
 }

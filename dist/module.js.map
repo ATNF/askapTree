@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/module.js"],"names":["treePanelCtrl"],"mappings":";;;;;;;;AAAQA,gB,SAAAA,a;;;wBAGPA,a","file":"module.js","sourcesContent":["import {treePanelCtrl} from './ctrl';\n\nexport {\n\ttreePanelCtrl as PanelCtrl\n};\n"]}
