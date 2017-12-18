@@ -41,7 +41,7 @@ return function(callback) {
 
 	var meas = ""; // Used to hold the measurement argument passed in via the URL
 	var field = ""; // Used to hold the field argument passed in via the URL
-	var type = ""; // Used to hold the argument specifying what type of panel to make
+	var plotType = ""; // Used to hold the argument specifying what type of panel to make
 	var tags = []; // Used to hold the valid tag keys for the measurement grabbed from the jquery call
 	var groupBy = []; // Populated later in this file to be pushed to the dashboard
 	var sourceType = "auto";
@@ -63,9 +63,11 @@ return function(callback) {
 		field = ARGS.field;
 	}
 
-	if(!_.isUndefined(ARGS.type)) {
-		type = ARGS.type;
+	if(!_.isUndefined(ARGS.plotType)) {
+		plotType = ARGS.plotType;
 	}
+
+	console.log(plotType);
 	
 	groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.
 
@@ -252,7 +254,7 @@ return function(callback) {
 						"sort": 0,
 						"value_type": "cumulative"
 					},
-					"type": type,
+					"type": plotType,
 					"xaxis": {
 						"mode": "time",
 						"name": null,
