@@ -9,8 +9,12 @@
       "name": "Stuart Buchan"
     },
     "keywords": ["tree", "panel"],
+    "logos": {
+            "small": "img/logo.png",
+            "large": "img/logo.png"
+        },	
     "version": "1.0.0",
-    "updated": "2017-12-01"
+    "updated": "2017-12-18"
   },
 
   "dependencies": {

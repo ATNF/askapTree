@@ -322,8 +322,9 @@ function update(source) {
       .attr('class', 'node')
       .attr("transform", function(d) {
         return "translate(" + source.y0 + "," + source.x0 + ")";
-    })
-    .on('click', click);
+      })
+      .on('click', click)
+      .on("contextmenu", rightClick);
 
   // Add Circle for the nodes
   nodeEnter.append('circle')
@@ -436,15 +437,22 @@ function update(source) {
         d.children = d._children;
         d._children = null;
 	if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
-		launchDash(d["data"]["name"], d["data"]["meas"]); // Passes control to a function that opens the desired dashboard in a new tab.
+		launchDash(d["data"]["name"], d["data"]["meas"], "graph"); // Passes control to a function that opens the desired dashboard in a new tab.
 	}
       }
     update(d);
+  }
+
+  function rightClick(d) {
+    event.preventDefault();
+    if(d.children == null) {
+    	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel");
+    }
   }
 }
 
 // launchDash takes in two variables - the name of the field, and the name of the measurement. These variables are used to create a scripted dashboard URL, which the user is
 // then linked to.
-function launchDash(field, meas) {
-	window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field); // Replace port with Grafana server port
+function launchDash(field, meas, type) {
+	window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
 }

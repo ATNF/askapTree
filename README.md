@@ -1,5 +1,7 @@
-# Australian Square Kilometer Array Pathfinder Telescope Tree
-
+<p align="center">
+# Australian Square Kilometer Array Pathfinder Telescope
+## Hierarchy Representation
+</p>
 This panel plugin for Grafana allows the user to graphically drill down to the exact measurement point desired in the ASKAP influxDB database. It is intended to be used with scripted dashboards, and hence a node with no sprouting children will link to a scripted dashboard to view the desired measurement.
 
 ## Functionality
@@ -8,8 +10,8 @@ The panel currently upon startup uses a jquery request to grab the metadata for 
 
 ## To Be Implemented:
 
-* Implement jquery request in the scripted dashboard file to grab all of the tag keys associated with the measurement.
 * Add editor tab to customise look of tree.
+* Some measurements cannot be displayed on a graph. These measurements need to be loaded via the Discrete2 dashboard panel. The user should have an option to select the plotting method for the generated scripted dashboard.
 
 ## Usage
 
