@@ -13,7 +13,6 @@ The panel currently upon startup uses a jquery request to grab the metadata for 
 ## To Be Implemented:
 
 * Add editor tab to customise look of tree.
-* Some measurements cannot be displayed on a graph. These measurements need to be loaded via the Discrete2 dashboard panel. The user should have an option to select the plotting method for the generated scripted dashboard.
 
 ## Usage
 

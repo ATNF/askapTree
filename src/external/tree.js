@@ -229,6 +229,7 @@ function getField(measurement, loc, locL2, locMeas) {
 		datatype: 'json'
 	}).done(function(result) {
 		var tempObj = null;
+
 		// Check to make sure the returned json object is defined before continuing
 		if(!(result["results"][0]["series"] == undefined)) {
 			var field = result["results"][0]["series"][0]["values"];
@@ -236,7 +237,7 @@ function getField(measurement, loc, locL2, locMeas) {
 			// Cycle through all of the field values
 			for(i=0; i<field.length; i++) {
 				tempObj = new Object();
-				tempObj.name = field[i][0];
+				tempObj.name = field[i][0];	
 				tempObj.meas = measurement; // Store measurement name (parent) in the node so the information is available to create a dashboard on click.
 			
 				// If the measurement name is ade.paf.temps, need to push leafs to different locations than normal

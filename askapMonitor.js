@@ -170,12 +170,12 @@ return function(callback) {
 		// It returns an array of three elements - the first is to be pushed to dashboard, the second to tags and the third to groupBy.
 		for(var i=0; i<tagKeys.length; i++) {
 			// Grafana doesn't like the "?" char, ignoring it until a fix is written.
-			if(!(tagKeys[i][0].includes("?"))) {
+//			if(!(tagKeys[i].includes("?"))) {
 				dropDown = dropDownGen(tagKeys[i], meas, i); // Pass control to dropDownGen function to make needed elements.
 				dashboard.templating.list.push (dropDown[0]); // Push drop down list to top of dashboard.
 				tags.push (dropDown[1]); // Push information to Grafana telling it to update tags based on dropdown list value.
 				groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
-			}
+//			}
 		}
 
 		groupBy.push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
@@ -369,6 +369,18 @@ function dropDownGen(key, meas, i) {
 	// Therefore, on each iteration of the for loop this function is called in after the first, string together with an AND.
 	if(i != 0) {
 		retVal[1].condition = "AND";
+	}
+	
+	if(key == "d???") {
+		retVal[0].label = "dom";
+		retVal[0].name = "dom";
+		retVal[1].value = "/^$dom$/";
+	}
+
+	if(key == "s???") {
+		retVal[0].label = "blocks";
+		retVal[0].name = "blocks";
+		retVal[1].value = "/^$blocks$/";
 	}
 
 	return retVal; // Return the object
