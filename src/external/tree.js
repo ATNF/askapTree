@@ -446,7 +446,7 @@ function update(source) {
 
   function rightClick(d) {
     event.preventDefault();
-    if(d.children == null) {
+    if((d.children == null) && (d._children == null)) {
     	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel");
     }
   }
