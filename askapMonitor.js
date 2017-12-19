@@ -52,6 +52,8 @@ return function(callback) {
 	var tagKeys = null; // Used to hold the array of tag keys returned from the jquery call
 	var dropDown; // Temp object used to hold the templating information for the Grafana dashboard
 	var aliasString = ""; // Used to store the aliases for the tag keys pushed to the dashboard
+	var newType = ""; // Used to hold the string dictating the new plot type to redirect to when the user clicks the hyperlink below the graph
+	var otherPlotName = ""; // Used to provide the user with information on what the other type of plot will show them
 
 	// This section checks to see if the arguments for the measurement and field have been passed in via the URL.
 	// If they have been defined, they are passed into the corresponding vars.
@@ -67,7 +69,7 @@ return function(callback) {
 		plotType = ARGS.plotType;
 	}
 
-	console.log(plotType);
+	//console.log(plotType);
 	
 	groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.
 
@@ -163,7 +165,7 @@ return function(callback) {
 		]};
 
 		// set a title
-		//dashboard.title = field; // TODO:Need to think of a way to generate a good title
+		dashboard.title = result["desc"]; // TODO:Need to think of a way to generate a good title
 		dashboard.hideControls = true;
 
 		// Need to push all of the dropdown lists to the dashboard on top of the plot.
@@ -299,6 +301,33 @@ return function(callback) {
 		}
 
 		dashboard.rows[0]["panels"][0]["targets"][0].alias = aliasString; // Populate empty field with the generate alias string
+
+		// Push a panel beneath the plot allowing the user to quickly jump to a discrete plot of the same measurement
+		if(plotType == "graph") {
+			newType = "coprglory-discrete-panel";
+			otherPlotName = "discrete time plot";
+		}
+
+		else if(plotType == "coprglory-discrete-panel") {
+			newType = "graph";
+			otherPlotName = "time series graph"
+		}
+		
+
+		dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lookup name"
+			title: 'Chart',
+			height: '20px',
+			panels: [
+				{
+					title: "",
+					type: 'text',
+					span: 12,
+					fill: 1,
+					mode: "html",
+					content: "<p>\n\t<a target=\"_blank\" href=\"http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
+				}
+			]
+		});
 
 		callback(dashboard); // Return the completed dashboard
 
