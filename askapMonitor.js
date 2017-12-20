@@ -165,19 +165,16 @@ return function(callback) {
 		]};
 
 		// set a title
-		dashboard.title = result["desc"]; // TODO:Need to think of a way to generate a good title
+		dashboard.title = result["desc"];
 		dashboard.hideControls = true;
 
 		// Need to push all of the dropdown lists to the dashboard on top of the plot.
 		// It returns an array of three elements - the first is to be pushed to dashboard, the second to tags and the third to groupBy.
 		for(var i=0; i<tagKeys.length; i++) {
-			// Grafana doesn't like the "?" char, ignoring it until a fix is written.
-//			if(!(tagKeys[i].includes("?"))) {
-				dropDown = dropDownGen(tagKeys[i], meas, i); // Pass control to dropDownGen function to make needed elements.
-				dashboard.templating.list.push (dropDown[0]); // Push drop down list to top of dashboard.
-				tags.push (dropDown[1]); // Push information to Grafana telling it to update tags based on dropdown list value.
-				groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
-//			}
+			dropDown = dropDownGen(tagKeys[i], meas, i); // Pass control to dropDownGen function to make needed elements.
+			dashboard.templating.list.push (dropDown[0]); // Push drop down list to top of dashboard.
+			tags.push (dropDown[1]); // Push information to Grafana telling it to update tags based on dropdown list value.
+			groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
 		}
 
 		groupBy.push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
@@ -362,8 +359,8 @@ function dropDownGen(key, meas, i) {
 			"allValue": null,
 			"current": {
 				"tags": [],
-				"text": "All",
-				"value": [ "$__all" ] // Default to display all keys on page load
+				"text": "All", //All
+				"value": [ "$_all" ] // Default to display all keys on page load $_all
 			},
 			"datasource": "askap",
 			"hide": 0,

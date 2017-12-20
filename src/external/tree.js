@@ -28,6 +28,13 @@ function makeTree(cont) {
 		var locMeas = 0; // Vaiable to hold location of the measurement name node.
 		var i = 0; // For loop incrementer.
 		var j = 0; // As above.
+		var workingNode = null; // Used for predefined expansion of tree by user supplied arguments in URL
+		var nextNode = null; // As above.
+
+		// If the user has been linked to a certain location in the tree, parse the information located in the URL to expand the branch
+		var url_string = window.location.href;
+		var url = new URL(url_string);
+		var locLink = url.searchParams.get("locLink");
 
 		// Loop through each object returned by the jquery call, using the returned strings to make the tree structure.
 		for(i = 0; i<len; i++) {
@@ -170,9 +177,25 @@ function makeTree(cont) {
 			root.y0 = 0;
 
 			// Collapse after the second level
-			root.children.forEach(collapse);
+			root.children.forEach(collapse);	
 
 			update(root);
+			
+			// If the user has specified a branch path in the URL, expand the path
+			if(locLink != null) {
+				locLink = locLink.split(","); // Split up the branch path string on the commas to generate an array
+				workingNode = root; // Initialise the workingNode to be the root of the tree
+				for(i=0; i<locLink.length; i++) { // Cycle through all of the layers in the specified branch path
+					for(j=0; j<workingNode.children.length; j++) { // Cyle through all of the children of the working node
+						// If a child of the working node matches the name specified in the branch path, expand it using the click function 
+						if(locLink[i] == workingNode.children[j]["data"]["name"]) {
+							click(workingNode.children[j]);
+							nextNode = workingNode.children[j]; // Store the location of the successful node to look through it next
+						}
+					}
+					workingNode = nextNode; // Update working node for next loop
+				}
+			}
 		});	
 	});		
 }
@@ -429,7 +452,7 @@ function update(source) {
     return path
   }
 
-  // Toggle children on click.
+/*  // Toggle children on click.
   function click(d) {
     if (d.children) { // If the node has already been clicked and the children sprouted
         d._children = d.children;
@@ -442,14 +465,62 @@ function update(source) {
 	}
       }
     update(d);
-  }
+  }*/
 
   function rightClick(d) {
     event.preventDefault();
     if((d.children == null) && (d._children == null)) {
     	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel");
+    } else if((d.children == null) && (d._children != null)) { // If the node is node a leaf but has not been expanded, give the user an option to copy the path
+	getPath(d);
     }
   }
+}
+
+// getPath takes in one parameter - the data of a node in the tree. It grabs the name of the node, and stores it in a path string. It then jumps up a level,
+// looking at the parent of the inital node. It grabs the name of the parent and appends it to the path string. It does this until it reaches the first level
+// of the tree, ignoring the root node as this is not needed in the path description.
+function getPath(d) {
+	var currentNode = d;
+	var path = "";
+	var leaf = true;
+	var newURL = "";
+
+	while(currentNode["data"]["name"] != "ASKAP") {
+		// leaf is used to ignore inserting a comma if it is the bottom level node
+		if(leaf) {
+			path = currentNode["data"]["name"]+path;
+			leaf = false;
+		}
+		else {
+			path = currentNode["data"]["name"]+","+path;
+		}
+		currentNode = currentNode.parent;
+	}
+
+	newURL = window.location.href;
+	// If the URL already includes a branch path, need to delete it before inserting the updated one
+	if(newURL.includes('&')) {
+		newURL = newURL.substring(0, newURL.indexOf('&'));
+	}
+	newURL += "&locLink="+path;
+	
+	window.prompt("Link to tree location:", newURL); // Open the URL in a text box that the user can copy to their clipboard
+}
+
+// Toggle children on click.
+function click(d) {
+	if (d.children) { // If the node has already been clicked and the children sprouted
+		d._children = d.children;
+		d.children = null;
+	} else { // If the node has not been clicked yet	
+		d.children = d._children;
+		d._children = null;
+		if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
+			launchDash(d["data"]["name"], d["data"]["meas"], "graph"); // Passes control to a function that opens the desired dashboard in a new tab.
+	}
+}
+update(d);
 }
 
 // launchDash takes in two variables - the name of the field, and the name of the measurement. These variables are used to create a scripted dashboard URL, which the user is
