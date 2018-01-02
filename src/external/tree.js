@@ -470,7 +470,7 @@ function update(source) {
   function rightClick(d) {
     event.preventDefault();
     if((d.children == null) && (d._children == null)) {
-    	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel");
+    	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel", null);
     } else if((d.children == null) && (d._children != null)) { // If the node is node a leaf but has not been expanded, give the user an option to copy the path
 	getPath(d);
     }
@@ -517,15 +517,59 @@ function click(d) {
 		d.children = d._children;
 		d._children = null;
 		if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
-			launchDash(d["data"]["name"], d["data"]["meas"], "graph"); // Passes control to a function that opens the desired dashboard in a new tab.
+			// Need to check the state of the URL to see what display options have been selected  to send to the graph. This is done through getOptions().
+			launchDash(d["data"]["name"], d["data"]["meas"], "graph", getOptions()); // Passes control to a function that opens the desired dashboard in a new tab.
 	}
 }
 update(d);
 }
 
+// getOptions takes in no parameters. Its purpose is to read the information stored in the URL from the "Display Options" custom template and use this to send an integer to
+// the scripted dashboard URL on left click of a node. It functions by initially grabbing the URL parameters, and then discarding the values not needed. It then cycles
+// through what is left and pushed the values of the parameter to an array of strings called displayOptions. If the length of this is 2, the user has selected to view both
+// points and lines, and hence the return value is set as 2. If this is not the case and the length is 1, a switch case statement is used to set the return value appropriately.
+// The returned string is therefore an integer representing the state of the template value with the following convention:
+// 0 - Points only | 1 - Lines only | 2 - Points and lines
+function getOptions() {
+	var displayOptions = [];
+	var retVal = "0";
+	var url = new URL(window.location.href);
+	var params = new URLSearchParams(url.search.replace("orgId=1&", "")); // Can discard the orgId param
+
+	for(let p of params) {
+		displayOptions.push(p[1]);
+	}
+
+	if(displayOptions.length == 2) {
+		retVal = "2";
+	}
+
+	else if(displayOptions.length == 1) {
+		switch(displayOptions[0]) {
+			case "Dots":
+				retVal = "0";
+				break;
+			case "Lines":
+				retVal = "1";
+				break;
+			default:
+				break;
+		}
+	}
+
+	return retVal;
+}
+
 // launchDash takes in two variables - the name of the field, and the name of the measurement. These variables are used to create a scripted dashboard URL, which the user is
 // then linked to.
 
-function launchDash(field, meas, type) {
-	window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
+function launchDash(field, meas, type, displayOption) {
+	// If the display option is not null, the user has specified how to plot the graph
+	if(displayOption != null) {
+		window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type+"&dispOpt="+displayOption); // Replace port with Grafana server port
+	}
+
+	else {
+		window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
+	}
 }

@@ -42,12 +42,14 @@ return function(callback) {
 	var meas = ""; // Used to hold the measurement argument passed in via the URL
 	var field = ""; // Used to hold the field argument passed in via the URL
 	var plotType = ""; // Used to hold the argument specifying what type of panel to make
+	var dispOpt = ""; // Used ot hold the argument specifying how the user wishes to view the plot
 	var tags = []; // Used to hold the valid tag keys for the measurement grabbed from the jquery call
 	var groupBy = []; // Populated later in this file to be pushed to the dashboard
 	var sourceType = "auto";
 	var dataSource = "auto";
 	var format = "short";
-	var pointMode = "null";
+	var points = true; // Default to having points displayed
+	var pointMode = "null"; // Default to not having the points connected
 	var pointRadius = 1;
 	var tagKeys = null; // Used to hold the array of tag keys returned from the jquery call
 	var dropDown; // Temp object used to hold the templating information for the Grafana dashboard
@@ -69,7 +71,28 @@ return function(callback) {
 		plotType = ARGS.plotType;
 	}
 
-	//console.log(plotType);
+	if(!_.isUndefined(ARGS.dispOpt)) {
+		dispOpt = ARGS.dispOpt;
+	}
+
+	// Switch based on the display option parameter passed in via the URL. Following the convention stated in tree.js, 0 signifies points only. 1 signifies lines only.
+	// 2 signifies both points and lines.
+	switch(dispOpt) {
+		case "0":
+			points = true;
+			pointMode = "null";
+			break;
+		case "1":
+			points = false;
+			pointMode = "connected";
+			break;
+		case "2":
+			points = true;
+			pointMode = "connected";
+			break;
+		default:
+			break;
+	}
 	
 	groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.
 
@@ -207,7 +230,7 @@ return function(callback) {
 					"nullPointMode": pointMode,
 					"percentage": false,
 					"pointradius": pointRadius,
-					"points": (pointRadius>0),
+					"points": points,
 					"renderer": "flot",
 					"seriesOverrides": [
 						{
