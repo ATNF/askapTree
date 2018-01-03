@@ -56,6 +56,7 @@ return function(callback) {
 	var aliasString = ""; // Used to store the aliases for the tag keys pushed to the dashboard
 	var newType = ""; // Used to hold the string dictating the new plot type to redirect to when the user clicks the hyperlink below the graph
 	var otherPlotName = ""; // Used to provide the user with information on what the other type of plot will show them
+	var meanObj = null; // Used to tell Grafana to include mean() in the select field of the metrics tab when the plot type is a graph
 
 	// This section checks to see if the arguments for the measurement and field have been passed in via the URL.
 	// If they have been defined, they are passed into the corresponding vars.
@@ -93,8 +94,12 @@ return function(callback) {
 		default:
 			break;
 	}
-	
-	groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.
+
+	// If the plot type is graph, group the measurements by time. Doesn't make sense to include this in discrete plots.
+	if(plotType == "graph") {
+		groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.
+		groupBy.push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
+	}
 
 	// Makes a call to the akingest01 server, passing in the measurement and field for the desired plot.
 	// Returns a JSON object containing units, description and valid tag set.
@@ -198,9 +203,7 @@ return function(callback) {
 			dashboard.templating.list.push (dropDown[0]); // Push drop down list to top of dashboard.
 			tags.push (dropDown[1]); // Push information to Grafana telling it to update tags based on dropdown list value.
 			groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
-		}
-
-		groupBy.push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
+		}	
 
 		dashboard.rows.push({
 			"collapse": false,
@@ -256,10 +259,6 @@ return function(callback) {
 											field
 										],
 										"type": "field"
-									},
-									{
-										"params": [],
-										"type": "mean"
 									}
 								]
 							],
@@ -311,6 +310,14 @@ return function(callback) {
 			"titleSize": "h6",
 		});
 
+		// If the plot type is graph, add mean() to the select field
+		if(plotType == "graph") {
+			meanObj = new Object();
+			meanObj.params = [];
+			meanObj.type = "mean";
+			dashboard.rows[0]["panels"][0]["targets"][0]["select"][0].push(meanObj);
+		}
+
 		// Make a comma seperated string for the tag aliases to increase readability of the plot
 		for(i=0; i<tagKeys.length; i++) {
 			aliasString += "[[tag_"+tagKeys[i]+"]]";
@@ -347,8 +354,7 @@ return function(callback) {
 					content: "<p>\n\t<a target=\"_blank\" href=\"http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
 				}
 			]
-		});
-
+		});;
 		callback(dashboard); // Return the completed dashboard
 
 	}).fail(function(result) { // If the call to the database failed, handle the error
