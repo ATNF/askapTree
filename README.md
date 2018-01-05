@@ -23,7 +23,6 @@ This panel plugin for Grafana allows the user to graphically drill down to the e
 
 ## Usage
 
-* Navigate into src/externals and open tree.js in your text editor. At the end of the file, the Grafana port number will need to be changed to the port number the user specified in their Grafana installation. Following this, run grunt in the root directory to move everything over to the dist directory.
 * The file askapMonitor.js is used for generating the scripted dashboard specified by clicking the lowest leaf node in the hierarchy. In order to launch, the js file needs to be moved to the Grafana installation directory, placed in public/dashboards/.
 * For functionality with the "Display Options" templated value, the main hierarchy is itself a scripted dashboard. Therefore the file treeDash.js needs to also be moved to the Grafana installation directory, placed in public/dashboards/.
 * With the Grafana server running, go to the following address: **_YourGrafanaServer_**/dashboard/script/treeDash.js

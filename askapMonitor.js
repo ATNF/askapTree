@@ -56,6 +56,7 @@ return function(callback) {
 	var aliasString = ""; // Used to store the aliases for the tag keys pushed to the dashboard
 	var newType = ""; // Used to hold the string dictating the new plot type to redirect to when the user clicks the hyperlink below the graph
 	var otherPlotName = ""; // Used to provide the user with information on what the other type of plot will show them
+	var url = ''; // Used to hold the value of the Grafana server for redirecting the user to the other plot type when the link is clicked
 	var meanObj = null; // Used to tell Grafana to include mean() in the select field of the metrics tab when the plot type is a graph
 
 	// This section checks to see if the arguments for the measurement and field have been passed in via the URL.
@@ -97,8 +98,7 @@ return function(callback) {
 
 	// If the plot type is graph, group the measurements by time. Doesn't make sense to include this in discrete plots.
 	if(plotType == "graph") {
-		groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.
-		groupBy.push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
+		groupBy.push({"params": [ "$ti" ], "type": "time" }); // time($ti) Group By parameter for the dashboard.	
 	}
 
 	// Makes a call to the akingest01 server, passing in the measurement and field for the desired plot.
@@ -312,6 +312,7 @@ return function(callback) {
 
 		// If the plot type is graph, add mean() to the select field
 		if(plotType == "graph") {
+			dashboard.rows[0]["panels"][0]["targets"][0]["groupBy"].push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
 			meanObj = new Object();
 			meanObj.params = [];
 			meanObj.type = "mean";
@@ -340,6 +341,8 @@ return function(callback) {
 			otherPlotName = "time series graph"
 		}
 		
+		url = window.location.href; // Grab the URL as a string
+		url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
 
 		dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lookup name"
 			title: 'Chart',
@@ -351,7 +354,7 @@ return function(callback) {
 					span: 12,
 					fill: 1,
 					mode: "html",
-					content: "<p>\n\t<a target=\"_blank\" href=\"http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
+					content: "<p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
 				}
 			]
 		});;

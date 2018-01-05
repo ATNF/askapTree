@@ -564,12 +564,15 @@ function getOptions() {
 // then linked to.
 
 function launchDash(field, meas, type, displayOption) {
+	// The scripted dashboard will be run on the same server as the user, therefore can grab the current URL and use that to link the user to the correct location
+	var url = window.location.href; // Grab the URL as a string
+	url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
 	// If the display option is not null, the user has specified how to plot the graph
 	if(displayOption != null) {
-		window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type+"&dispOpt="+displayOption); // Replace port with Grafana server port
+		window.open(url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type+"&dispOpt="+displayOption); // Replace port with Grafana server port
 	}
 
 	else {
-		window.open("http://rotwang.atnf.csiro.au:3500/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
+		window.open(url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
 	}
 }
