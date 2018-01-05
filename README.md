@@ -17,10 +17,6 @@ This panel plugin for Grafana allows the user to graphically drill down to the e
 
 * Add editor tab to customise look of tree.
 
-## Known Bugs:
-
-* If the user right clicks on a leaf node to open a discrete time plot, then uses the hyperlink beneath the plot to redirect to a graph instead, their display options will not be recognised.
-
 ## Usage
 
 * The file askapMonitor.js is used for generating the scripted dashboard specified by clicking the lowest leaf node in the hierarchy. In order to launch, the js file needs to be moved to the Grafana installation directory, placed in public/dashboards/.

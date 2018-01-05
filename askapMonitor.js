@@ -354,7 +354,7 @@ return function(callback) {
 					span: 12,
 					fill: 1,
 					mode: "html",
-					content: "<p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
+					content: "<p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"&dispOpt="+dispOpt+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
 				}
 			]
 		});;

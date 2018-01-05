@@ -470,7 +470,7 @@ function update(source) {
   function rightClick(d) {
     event.preventDefault();
     if((d.children == null) && (d._children == null)) {
-    	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel", null);
+    	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel", getOptions());
     } else if((d.children == null) && (d._children != null)) { // If the node is node a leaf but has not been expanded, give the user an option to copy the path
 	getPath(d);
     }
@@ -568,11 +568,11 @@ function launchDash(field, meas, type, displayOption) {
 	var url = window.location.href; // Grab the URL as a string
 	url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
 	// If the display option is not null, the user has specified how to plot the graph
-	if(displayOption != null) {
+//	if(displayOption != null) {
 		window.open(url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type+"&dispOpt="+displayOption); // Replace port with Grafana server port
-	}
-
+//	}
+/*
 	else {
 		window.open(url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type); // Replace port with Grafana server port
-	}
+	}*/
 }
