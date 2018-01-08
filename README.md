@@ -12,6 +12,7 @@ This panel plugin for Grafana allows the user to graphically drill down to the e
 * When the user clicks through all a branch of the ASKAP hierarchy, they will be presented with a field measurement which when clicked will launch a Grafana scripted dashboard to view the plot. Left clicking on the node will open the standard Grafana graph panel. Right clicking on the node will open a discrete time chart developed by CorpGlory. The scripted dashboard generated also has hyperlinks beneath the generated panel the allows the user to easily jump between the two types of plot for ease of access.
 * When the user right clicks on a node that has children which are collapsed at that moment, an alert will open presenting the user with a URL which they can copy to their clipboard specifying the location in the tree they are currently examining. Pasting this URL into their browser will automatically open the node branch to the specified point. This feature allows users to share tree locations, or even to store the path of frequently visited nodes.
 * A drop down box located at the top of the ASKAP Tree dashboard allows the user to select how they wish the graph panel to be displayed. The user has the option between displaying plots with only data points, with only data point connecting lines, or with both data points and connecting lines.
+* Hovering the mouse over a measurement will give a detailed description of that measurement.
 
 ## To Be Implemented:
 

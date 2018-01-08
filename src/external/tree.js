@@ -43,10 +43,10 @@ function makeTree(cont) {
 			description = null;
 			tempStrings = result["results"][0]["series"][0]["values"][i][0].split(","); // Split the string on the "," character, allowing easier parsing.
 			if(tempStrings.length == 5) { // Indicates that the description has been included in the metadata
-				l1nodeName = tempStrings[2].split("level1=")[1].replace("\\", "").replace("\\ ", " "); // Grab information after "level1=" and get rid of "\" charaters
-				l2nodeName = tempStrings[3].split("level2=")[1].replace("\\", "").replace("\\ ", " ");
-				description = tempStrings[1].split("desc=")[1].replace("\\", "").replace("\\ ", " ");
-				measurement = tempStrings[4].split("measurement=")[1];
+				l1nodeName = tempStrings[2].split("level1=")[1].replace(/\\/g, ""); // Grab information after "level1=" and get rid of "\" charaters
+				l2nodeName = tempStrings[3].split("level2=")[1].replace(/\\/g, "");
+				description = tempStrings[1].split("desc=")[1].replace(/\\/g, "");
+				measurement = tempStrings[4].split("measurement=")[1].replace(/\\/g, "");;
 				madeNode = check(l1names, l1nodeName); // Passes control to a function to check whether the node name has already been assigned a node.
 				// If the node has not been made
 				if(!madeNode) {
@@ -71,9 +71,9 @@ function makeTree(cont) {
 				}	
 			}
 			else { // Indicates that the metadata being looked at doesn't have the description included.  TODO: Modulate this in a function
-				l1nodeName = tempStrings[1].split("level1=")[1].replace("\\", "").replace("\\ ", " ");
-				l2nodeName = tempStrings[2].split("level2=")[1].replace("\\", "").replace("\\ ", " ");
-				measurement = tempStrings[3].split("measurement=")[1];
+				l1nodeName = tempStrings[1].split("level1=")[1].replace(/\\/g, "");
+				l2nodeName = tempStrings[2].split("level2=")[1].replace(/\\/g, "");
+				measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");;
 				madeNode = check(l1names, l1nodeName);
 				if(!madeNode) {
 					tempObj = newNode(l1nodeName);
@@ -99,12 +99,14 @@ function makeTree(cont) {
 					locL2 = j;
 				}
 			}
-			// If the description has been included, set the name of the node to be the description. Else, use the measurement name.
+			// If the description has been included, push the name to a variable called desc to be displayed as a tooltip when the user hovers over the node.
 			if(description != null) {
-				tempObj = newNode(measurement);//description;// + " ("+measurement+")";
-			}
-			else {
 				tempObj = newNode(measurement);
+                                tempObj.desc = description;
+			}
+			else { // If the description is not included, set the desc var as an empty string
+				tempObj = newNode(measurement);
+                                tempObj.desc = "";
 			}
 
 			locMeas = treeData["children"][loc]["children"][locL2]["children"].push(tempObj); // Push the measurement to the correct parent and grab the location.
@@ -335,6 +337,16 @@ function update(source) {
   // Normalize for fixed-depth.
   nodes.forEach(function(d){ d.y = d.depth * 180});
 
+  // ***************** Tooltip section **************************
+
+  // Define the tooltip to show when the user hovers over a measurement node
+  var tooltip = d3.select("body")
+      .append("div")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("font", "12px sans-serif")
+      .style("opacity", 0); // Initially set to invisible
+
   // ****************** Nodes section ***************************
 
   // Update the nodes...
@@ -348,7 +360,7 @@ function update(source) {
         return "translate(" + source.y0 + "," + source.x0 + ")";
       })
       .on('click', click)
-      .on("contextmenu", rightClick);
+      .on("contextmenu", rightClick);   
 
   // Add Circle for the nodes
   nodeEnter.append('circle')
@@ -357,6 +369,25 @@ function update(source) {
       .style("fill", function(d) {
           return d._children ? "lightsteelblue" : "#fff";
       });
+
+  nodeEnter
+      .on("mouseover", function (d) { // When the user hovers over a node, show the tooltip
+          tooltip.text(d["data"].desc); // Grab the description name stored in the node
+          tooltip.transition() // Transition to show the node
+            .duration(200)
+            .style("opacity", .9);
+      })
+      .on("mousemove", function () {return tooltip.style("top", (event.pageY-10)+"px").style("left", (event.pageX+10)+"px");}) // Follow the mouse cursor
+      .on("mouseout", function (d) { // When the mouse moves off the node, fade away the tooltip
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", 0);
+      })
+      .append('rect') // Invisible rectangle used to trigger the mouseover actions
+      .attr('class', 'click-capture')
+      .style('visibility', 'hidden')
+      .attr('x', 0)
+      .attr('y', 0);
 
   // Add labels for the nodes
   nodeEnter.append('text')
