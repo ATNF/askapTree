@@ -1,3 +1,14 @@
+// Monitor for presses of the control key for giving the user tree location on node click
+ctrlPressed = false; // Initialise globally that control has not been pressed
+$(document).keydown(function(event) {
+    if(event.which=="17")
+        ctrlPressed = true;
+});
+
+$(document).keyup(function() {
+        ctrlPressed = false;
+});
+
 function makeTree(cont) {
 // Initialise the tree with the subsystems to be populated by call to influxDB
 	$.ajax( {
@@ -537,29 +548,12 @@ function update(source) {
     return path
   }
 
-/*  // Toggle children on click.
-  function click(d) {
-    if (d.children) { // If the node has already been clicked and the children sprouted
-        d._children = d.children;
-        d.children = null;
-      } else { // If the node has not been clicked yet	
-        d.children = d._children;
-        d._children = null;
-	if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
-		launchDash(d["data"]["name"], d["data"]["meas"], "graph"); // Passes control to a function that opens the desired dashboard in a new tab.
-	}
-      }
-    update(d);
-  }*/
-
   function rightClick(d) {
-    event.preventDefault();
-    if((d.children == null) && (d._children == null)) {
-    	launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel", getOptions());
-    } else if((d.children == null) && (d._children != null)) { // If the node is node a leaf but has not been expanded, give the user an option to copy the path
-	getPath(d);
-    }
-  }
+      event.preventDefault();
+      if((d.children == null) && (d._children == null)) {
+ 	    launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel", getOptions());
+      } 
+  } 
 }
 
 // getPath takes in one parameter - the data of a node in the tree. It grabs the name of the node, and stores it in a path string. It then jumps up a level,
@@ -591,11 +585,15 @@ function getPath(d) {
 	newURL += "&locLink="+path;
 	
 	window.prompt("Link to tree location:", newURL); // Open the URL in a text box that the user can copy to their clipboard
+    ctrlPressed = false;
 }
 
 // Toggle children on click.
 function click(d) {
-	if (d.children) { // If the node has already been clicked and the children sprouted
+    if(ctrlPressed) { // If the user is holding down the control key, give them the link to that location in the URL
+        getPath(d);
+    }
+	else if (d.children) { // If the node has already been clicked and the children sprouted
 		d._children = d.children;
 		d.children = null;
 	} else { // If the node has not been clicked yet	
@@ -604,9 +602,9 @@ function click(d) {
 		if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
 			// Need to check the state of the URL to see what display options have been selected  to send to the graph. This is done through getOptions().
 			launchDash(d["data"]["name"], d["data"]["meas"], "graph", getOptions()); // Passes control to a function that opens the desired dashboard in a new tab.
-	}
-}
-update(d);
+	    }
+    }
+    update(d);
 }
 
 // getOptions takes in no parameters. Its purpose is to read the information stored in the URL from the "Display Options" custom template and use this to send an integer to
