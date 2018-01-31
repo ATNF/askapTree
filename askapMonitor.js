@@ -390,9 +390,8 @@ function dropDownGen(key, meas, i) {
 		{
 			"allValue": null,
 			"current": {
-				"tags": [],
-				"text": "All", //All
-				"value": [ "$_all" ] // Default to display all keys on page load $_all
+				"text": "", //All
+				"value": [ "ak01" ] // Default to display all keys on page load $_all
 			},
 			"datasource": "askap",
 			"hide": 0,

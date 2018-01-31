@@ -60,43 +60,50 @@ dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lo
     height: '20px',
     panels: [
         {
-            title: "Help",
+            title: "Usage",
             type: 'text',
             span: 12,
             fill: 1,
             mode: "markdown",
-            content: "Click on nodes to drill towards a measurement point in that branch. Upon reaching a field to plot at the end of a branch (signified by the text appearing to the right of the node), left clicking will launch a time series plot in a new tab. Right clicking will launch a discrete time plot in a new tab."
+            content: "* Click on nodes to drill towards a measurement point in that branch.\n* Upon reaching a field to plot at the end of a branch (signified by the text appearing to the right of the node), left clicking will launch a time series plot in a new tab. Right clicking will launch a discrete time plot in a new tab.\n* Holding down control and left clicking on a node will issue an alert containing a URL to the location of the node clicked on. Pasting this URL into your browser will navigate automatically to this location."
         }
     ]
 });
 
 
-dashboard.templating = { "list": [{
-      "allValue": null,
-      "current": {
-		"tags": [],
-		"text": "Dots",
-		"value": [ "Dots" ]
-      },
-      "hide": 0,
-      "includeAll": false,
-      "label": "Display Options",
-      "multi": true,
-      "name": "displayOptions",
-      "options": [
-		{
-		    "selected": true,
-		    "text": "Dots",
-		    "value": "Dots"
-		},
-		{
-		    "selected": false,
-		    "text": "Lines",
-		    "value": "Lines"
-		}
-      ],
-      "query": "Dots, Lines",
-      "type": "custom"
-}]};
+dashboard.templating = { "list": [
+      {
+        "allFormat": "glob",
+        "allValue": null,
+        "current": {
+          "tags": [],
+          "text": "Dots",
+          "value": [
+            "Dots"
+          ]
+        },
+        "datasource": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Display Options",
+        "multi": true,
+        "name": "displayOptions",
+        "options": [
+          {
+            "selected": true,
+            "text": "Dots",
+            "value": "Dots"
+          },
+          {
+            "selected": false,
+            "text": "Lines",
+            "value": "Lines"
+          }
+        ],
+        "query": "Dots, Lines",
+        "refresh": 0,
+        "type": "custom"
+      }
+]};
 
 return dashboard;
