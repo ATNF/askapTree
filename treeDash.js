@@ -55,6 +55,22 @@ dashboard.rows.push({
     ]
 });
 
+dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lookup name"
+    title: 'Chart',
+    height: '20px',
+    panels: [
+        {
+            title: "Help",
+            type: 'text',
+            span: 12,
+            fill: 1,
+            mode: "markdown",
+            content: "Click on nodes to drill towards a measurement point in that branch. Upon reaching a field to plot at the end of a branch (signified by the text appearing to the right of the node), left clicking will launch a time series plot in a new tab. Right clicking will launch a discrete time plot in a new tab."
+        }
+    ]
+});
+
+
 dashboard.templating = { "list": [{
       "allValue": null,
       "current": {

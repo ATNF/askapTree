@@ -70,10 +70,56 @@ function makeTree(cont) {
 					locL2 = treeData["children"][loc]["children"].push(tempObj);	
 				}	
 			}
-			else { // Indicates that the metadata being looked at doesn't have the description included.  TODO: Modulate this in a function
+            // If the string was delimited into 4 parts, it means one of two possibilities:
+            // metadata, desc, level1, meas OR
+            // metadata, level1, level2, meas
+            // Need to check which one based on the string stored in [1] and operate accordingly
+			else if (tempStrings.length == 4) { // Indicates that the metadata being looked at doesn't have the description included, but does have a second level
+                if(tempStrings[1].includes("level1")) {
+                    l1nodeName = tempStrings[1].split("level1=")[1].replace(/\\/g, "");
+                    l2nodeName = tempStrings[2].split("level2=")[1].replace(/\\/g, "");
+                    measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");;
+                    madeNode = check(l1names, l1nodeName);
+                    if(!madeNode) {
+                        tempObj = newNode(l1nodeName);
+                        l1names.push(tempObj.name);
+                        treeData["children"].push(tempObj);
+                    }
+                    for(j=0; j<treeData["children"].length; j++) {
+                        if(treeData["children"][j]["name"] == l1nodeName) {
+                            loc = j;
+                        }
+                    }
+                    madeNode = checkChildren(treeData["children"][loc], l2nodeName);
+                    if(!madeNode) {
+                        tempObj = newNode(l2nodeName);
+                        l2names.push(tempObj.name);
+                        treeData["children"][loc]["children"].push(tempObj);
+                    }
+                }
+                else {
+                    l1nodeName = tempStrings[2].split("level1=")[1].replace(/\\/g, "");
+                    measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");;
+                    l2nodeName = null;
+				    description = tempStrings[1].split("desc=")[1].replace(/\\/g, "");
+
+                    madeNode = check(l1names, l1nodeName);
+                    if(!madeNode) {
+                        tempObj = newNode(l1nodeName);
+                        l1names.push(tempObj.name);
+                        treeData["children"].push(tempObj);
+                    }
+                    for(j=0; j<treeData["children"].length; j++) {
+                        if(treeData["children"][j]["name"] == l1nodeName) {
+                            loc = j;
+                        }
+                    }
+                }
+			}
+			else { // Indicates that the metadata being looked at doesn't have the description included or the second level
 				l1nodeName = tempStrings[1].split("level1=")[1].replace(/\\/g, "");
-				l2nodeName = tempStrings[2].split("level2=")[1].replace(/\\/g, "");
-				measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");;
+				measurement = tempStrings[2].split("measurement=")[1].replace(/\\/g, "");;
+                l2nodeName = null; // No second level before measurement
 				madeNode = check(l1names, l1nodeName);
 				if(!madeNode) {
 					tempObj = newNode(l1nodeName);
@@ -85,31 +131,35 @@ function makeTree(cont) {
 						loc = j;
 					}
 				}
-				madeNode = checkChildren(treeData["children"][loc], l2nodeName);
-				if(!madeNode) {
-					tempObj = newNode(l2nodeName);
-					l2names.push(tempObj.name);
-					treeData["children"][loc]["children"].push(tempObj);
-				}
+			}
 
-			}
 			// Finds the location of the correct place to push the measurement name to.
-			for(j=0; j<treeData["children"][loc]["children"].length; j++) {
-				if(treeData["children"][loc]["children"][j]["name"] == l2nodeName) {
-					locL2 = j;
-				}
-			}
+            if(l2nodeName != null) {
+			    for(j=0; j<treeData["children"][loc]["children"].length; j++) {
+				    if(treeData["children"][loc]["children"][j]["name"] == l2nodeName) {
+					    locL2 = j;
+				    }
+			    }
+            }
+            else {
+                locL2 = null;
+            }
 			// If the description has been included, push the name to a variable called desc to be displayed as a tooltip when the user hovers over the node.
 			if(description != null) {
 				tempObj = newNode(measurement);
-                                tempObj.desc = description;
+                tempObj.desc = description;
 			}
 			else { // If the description is not included, set the desc var as an empty string
 				tempObj = newNode(measurement);
-                                tempObj.desc = "";
+                tempObj.desc = "";
 			}
 
-			locMeas = treeData["children"][loc]["children"][locL2]["children"].push(tempObj); // Push the measurement to the correct parent and grab the location.
+            if(l2nodeName != null) {
+			    locMeas = treeData["children"][loc]["children"][locL2]["children"].push(tempObj); // Push the measurement to the correct parent and grab the location.
+            }
+            else {
+			    locMeas = treeData["children"][loc]["children"].push(tempObj); // Push the measurement to the correct parent and grab the location.
+            }
 			
 			// If measurement is ade.paf.temps, need to allocate two more lists on the next level to break up large amount of data.
 			if(measurement == "ade.paf.temps") {
@@ -308,9 +358,13 @@ function getField(measurement, loc, locL2, locMeas) {
 					}
 				}
 				// If no special allocation needs to take place, allocate child nodes as normal.
-				else {
+				else if(locL2 != null) {
 					treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
 				}
+                // If there is no level two
+                else {
+					treeData["children"][loc]["children"][locMeas]["children"].push(tempObj); 
+                }
 			}
 		}
 	});
