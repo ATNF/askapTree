@@ -1,13 +1,16 @@
 // Monitor for presses of the control key for giving the user tree location on node click
-ctrlPressed = false; // Initialise globally that control has not been pressed
+hover = false; // Initialise globally that the mouse is not hovering an element
+pathNode = null; // Initialise globally the value to store the node the user is attempting to grab the path of
 $(document).keydown(function(event) {
-    if(event.which=="17")
-        ctrlPressed = true;
+    if(event.which=="76")
+        if(hover) {
+            getPath(pathNode);
+        }
 });
 
-$(document).keyup(function() {
-        ctrlPressed = false;
-});
+//$(document).keyup(function() {
+//        ctrlPressed = false;
+//});
 
 function makeTree(cont) {
 // Initialise the tree with the subsystems to be populated by call to influxDB
@@ -437,6 +440,8 @@ function update(source) {
 
   nodeEnter
       .on("mouseover", function (d) { // When the user hovers over a node, show the tooltip
+          hover = true;
+          pathNode = d;
           tooltip.text(d["data"].desc); // Grab the description name stored in the node
           tooltip.transition() // Transition to show the node
             .duration(200)
@@ -444,6 +449,8 @@ function update(source) {
       })
       .on("mousemove", function () {return tooltip.style("top", (event.pageY-10)+"px").style("left", (event.pageX+10)+"px");}) // Follow the mouse cursor
       .on("mouseout", function (d) { // When the mouse moves off the node, fade away the tooltip
+          hover = false;
+          pathNode = null;
           tooltip.transition()
             .duration(200)
             .style("opacity", 0);
@@ -585,15 +592,11 @@ function getPath(d) {
 	newURL += "&locLink="+path;
 	
 	window.prompt("Link to tree location:", newURL); // Open the URL in a text box that the user can copy to their clipboard
-    ctrlPressed = false;
 }
 
 // Toggle children on click.
 function click(d) {
-    if(ctrlPressed) { // If the user is holding down the control key, give them the link to that location in the URL
-        getPath(d);
-    }
-	else if (d.children) { // If the node has already been clicked and the children sprouted
+	if (d.children) { // If the node has already been clicked and the children sprouted
 		d._children = d.children;
 		d.children = null;
 	} else { // If the node has not been clicked yet	
