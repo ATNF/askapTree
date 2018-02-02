@@ -29,12 +29,12 @@ function makeTree(cont) {
 		// ****** Variable Declarations ******
 		var map = result["results"][0]["series"][0]["values"]; // Array objects found in the database. Needs to be parsed still.
 		var len = map.length;
-		var tempStrings = null;; // Variable to hold array of strings returned when the strings returned by this jquery call are split on the "," character.
-		var tempObj = null;; // Temporary object used to create children nodes when required.
+		var tempStrings = null; // Variable to hold array of strings returned when the strings returned by this jquery call are split on the "," character.
+		var tempObj = null; // Temporary object used to create children nodes when required.
 		var l1names = []; // Keeps track of the node names that have been assigned to level 1 to avoid double-ups.
 		var l2names = []; // As above, but with level 2
-		var l1nodeName = null;; // Temporary string to hold the level 1 node name.
-		var l2nodeName = null;; // As above.
+		var l1nodeName = null; // Temporary string to hold the level 1 node name.
+		var l2nodeName = null; // As above.
 		var description = null; // Temporary string to hold the description of the node being generated.
 		var madeNode = false; // Boolean variable used with the name arrays above to check whether the node being looked at has already been generated.
 		var loc = 0; // Variable to hold location of node on level 1.
@@ -60,13 +60,17 @@ function makeTree(cont) {
 				l1nodeName = tempStrings[2].split("level1=")[1].replace(/\\/g, ""); // Grab information after "level1=" and get rid of "\" charaters
 				l2nodeName = tempStrings[3].split("level2=")[1].replace(/\\/g, "");
 				description = tempStrings[1].split("desc=")[1].replace(/\\/g, "");
-				measurement = tempStrings[4].split("measurement=")[1].replace(/\\/g, "");;
+				measurement = tempStrings[4].split("measurement=")[1].replace(/\\/g, "");
 				madeNode = check(l1names, l1nodeName); // Passes control to a function to check whether the node name has already been assigned a node.
 				// If the node has not been made
 				if(!madeNode) {
 					tempObj = newNode(l1nodeName); // Creates a new node and returns it into tempObj.
 					l1names.push(tempObj.name); // Pushes the name of the node to the array keeping track of assigned nodes.
 					treeData["children"].push(tempObj); // Pushes the node onto the 1st level of the tree.
+                    console.log("SORTING");
+                    //console.log(treeData["children"]);
+                    console.log("SORTED");
+                    //console.log(treeData["children"]);
 				}
 
 				// Cycle through the children on level 1 to find the location of the node to append the child on level 2 to. This needs to be done as if it is already
@@ -81,7 +85,12 @@ function makeTree(cont) {
 				if(!madeNode) {
 					tempObj = newNode(l2nodeName);
 					l2names.push(tempObj.name);
-					locL2 = treeData["children"][loc]["children"].push(tempObj);	
+					treeData["children"][loc]["children"].push(tempObj);	
+                    for(j=0; j<treeData["children"][loc]["children"].length; j++) {
+                        if(treeData["children"][loc]["children"][j]["name"] == l2nodeName) {
+                            locL2 = j;
+                        }
+                    }
 				}	
 			}
             // If the string was delimited into 4 parts, it means one of two possibilities:
@@ -92,7 +101,7 @@ function makeTree(cont) {
                 if(tempStrings[1].includes("level1")) {
                     l1nodeName = tempStrings[1].split("level1=")[1].replace(/\\/g, "");
                     l2nodeName = tempStrings[2].split("level2=")[1].replace(/\\/g, "");
-                    measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");;
+                    measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");
                     madeNode = check(l1names, l1nodeName);
                     if(!madeNode) {
                         tempObj = newNode(l1nodeName);
@@ -113,7 +122,7 @@ function makeTree(cont) {
                 }
                 else {
                     l1nodeName = tempStrings[2].split("level1=")[1].replace(/\\/g, "");
-                    measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");;
+                    measurement = tempStrings[3].split("measurement=")[1].replace(/\\/g, "");
                     l2nodeName = null;
 				    description = tempStrings[1].split("desc=")[1].replace(/\\/g, "");
 
@@ -132,7 +141,7 @@ function makeTree(cont) {
 			}
 			else { // Indicates that the metadata being looked at doesn't have the description included or the second level
 				l1nodeName = tempStrings[1].split("level1=")[1].replace(/\\/g, "");
-				measurement = tempStrings[2].split("measurement=")[1].replace(/\\/g, "");;
+				measurement = tempStrings[2].split("measurement=")[1].replace(/\\/g, "");
                 l2nodeName = null; // No second level before measurement
 				madeNode = check(l1names, l1nodeName);
 				if(!madeNode) {
@@ -170,9 +179,17 @@ function makeTree(cont) {
 
             if(l2nodeName != null) {
 			    locMeas = treeData["children"][loc]["children"][locL2]["children"].push(tempObj); // Push the measurement to the correct parent and grab the location.
+                if(locMeas == undefined) {
+                    console.log("MEASUREMENT");
+                    console.log(tempObj);
+                }
             }
             else {
 			    locMeas = treeData["children"][loc]["children"].push(tempObj); // Push the measurement to the correct parent and grab the location.
+                if(locMeas == undefined) {
+                    console.log("MEASUREMENT");
+                    console.log(tempObj);
+                }
             }
 			
 			// If measurement is ade.paf.temps, need to allocate two more lists on the next level to break up large amount of data.
@@ -204,7 +221,7 @@ function makeTree(cont) {
 				tempObj = newNode("Max");
 				treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
 			}
-
+            //console.log(locMeas);
 			getField(measurement, loc, locL2, locMeas-1); // Passes control to a function to grab the field keys from the database and append it to the correct location
 			
 			// Reset variables to recycle for next loop iteration.
@@ -216,6 +233,8 @@ function makeTree(cont) {
 		// The following section of code only runs once all of the jquery requests for the page have ceased. This ensures all the data requred for the tree has been collected
 		// before it continues to actually make the tree.
 		$( document ).ajaxStop( function() {		
+            depthFirst(treeData); // Use a depth first search approach to sort the first level of the tree
+            depthFirst(treeData["children"]); // Use a recursive depth first search approach to sort the rest of the tree
 			var margin = {top: 20, right: 90, bottom: 30, left: 90}, //20
 			    width = window.innerWidth - margin.left - margin.right, //960
 			    height = window.innerHeight - margin.top - margin.bottom; //1000
@@ -372,18 +391,54 @@ function getField(measurement, loc, locL2, locMeas) {
 					}
 				}
 				// If no special allocation needs to take place, allocate child nodes as normal.
-				else if(locL2 != null) {
+				else if(locL2 != null) { 
+                    //console.log(locMeas);
 					treeData["children"][loc]["children"][locL2]["children"][locMeas]["children"].push(tempObj);
 				}
                 // If there is no level two
                 else {
+                    //console.log(locMeas);
 					treeData["children"][loc]["children"][locMeas]["children"].push(tempObj); 
                 }
+
 			}
 		}
 	});
 }
 
+// depthFirst takes one argument - the node being examined. In the case of the first layer, there is only one child and hence it is sorted specially. For all other calls, the function iterates through all of the children, alphabetically sorting their children and then recursively calling itself to pass in it's own children to repeat the process. When all the children have been exhausted for a node, control returns to the parent that called the function, allowing the next iteration of the loop to start.
+function depthFirst(node) {
+    for(var child in node) {
+        if(child == "children") {
+            node[child] = alphabetical(node[child]);
+        }
+        if(node[child].children) {
+            node[child].children = alphabetical(node[child].children);
+            depthFirst(node[child].children);
+        }
+    }
+}
+
+// alphabetical takes in one argument - the tree branch currently being examined. It loops through all of the children on that leaf and stores their names in an array. The array is then sorted alphabetically. After this, a nested for loop is used to find the corresponding object to the element in the alphabetically sorted array. When this is found, it is copied to the same position as the name the alphaNames array to a temporary object list. Once alphabetically sorted, this list is then passed back to the main function and written in place of the list that was passed to this function originally, alphabetically sorting the nodes in the tree data.
+function alphabetical(depth) {
+    var alphaNames = [];
+    var tempObjList = [];
+    var i = 0;
+    var j = 0;
+
+    for(i = 0; i<depth.length; i++) {
+        alphaNames[i] = depth[i].name;
+    }
+    alphaNames.sort();
+    for(i = 0; i<depth.length; i++) {
+        for(j = 0; j<depth.length; j++) {
+            if(depth[j].name == alphaNames[i]) {
+                tempObjList[i] = depth[j]
+            }
+        }
+    }
+    return tempObjList;
+}
 // Collapse the node and all its children
 function collapse(d) {
   if(d.children) {
