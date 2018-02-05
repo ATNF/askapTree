@@ -52,6 +52,7 @@ return function(callback) {
 	var pointMode = "null"; // Default to not having the points connected
 	var pointRadius = 1;
 	var tagKeys = null; // Used to hold the array of tag keys returned from the jquery call
+    var element = null; // Used to iterate through the tagKeys array to check for badly named keys that can cause errors while plotting
 	var dropDown; // Temp object used to hold the templating information for the Grafana dashboard
 	var aliasString = ""; // Used to store the aliases for the tag keys pushed to the dashboard
 	var newType = ""; // Used to hold the string dictating the new plot type to redirect to when the user clicks the hyperlink below the graph
@@ -384,6 +385,11 @@ return function(callback) {
 // incrementor loop this function is called from. It returns an object with three elements. Descriptions for these 
 // elements can be seen in their usage in the above function.
 function dropDownGen(key, meas, i) {
+    var withoutQs = key; // Used to hold the altered keyname without question marks for the templating name
+    // Strip ??? from badly named tag keys until a workaround is made
+    if(key.includes("?")) {
+        withoutQs = key.replace(/\?/g, "");
+    } 
 
 	var retVal = [
 		// Generate the dropdown
@@ -396,9 +402,9 @@ function dropDownGen(key, meas, i) {
 			"datasource": "askap",
 			"hide": 0,
 			"includeAll": true,
-			"label": key,
+			"label": withoutQs,
 			"multi": true,
-			"name": key,
+			"name": withoutQs,
 			"options": [],
 			"query": "show tag values from \""+meas+"\" with key =\""+key+"\"", // database query
 			"refresh": 1,
@@ -414,7 +420,7 @@ function dropDownGen(key, meas, i) {
 		{
 			"operator" : '=~',
 			"key"       : key,
-			"value"     : "/^$"+key+"$/"
+			"value"     : "/^$"+withoutQs+"$/"
 		},
 		// Tell Grafana how to group the data
 		{
