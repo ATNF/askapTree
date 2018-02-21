@@ -213,7 +213,7 @@ return function(callback) {
 				{
 					"aliasColors": {},
 					"bars": false,
-					"datasource": "askap",
+					"datasource": "ASKAP",
 					"editable": true,
 					"error": false,
 					"fill": 0,
@@ -399,7 +399,7 @@ function dropDownGen(key, meas, i) {
 				"text": "", //All
 				"value": [ "ak01" ] // Default to display all keys on page load $_all
 			},
-			"datasource": "askap",
+			"datasource": "ASKAP",
 			"hide": 0,
 			"includeAll": true,
 			"label": withoutQs,
