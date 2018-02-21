@@ -15,6 +15,12 @@ $(document).keydown(function(event) {
 function makeTree(cont) {
 // Initialise the tree with the subsystems to be populated by call to influxDB
     $.ajax( {
+        xhdrFields: {
+            withCredentials : true
+        },
+        headers: {
+            'Authorization' : 'Basic ' + btoa('askap:askap')
+        },
         method: 'GET',
         url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
         type: 'POST',
@@ -330,6 +336,12 @@ function checkChildren(children, nodeName) {
 // to grab the field keys for the measurement in a json object from the database.
 function getField(measurement, loc, locL2, locMeas) {
     $.ajax( {
+        xhdrFields: {
+            withCredentials : true
+        },
+        headers: {
+            'Authorization' : 'Basic ' + btoa('askap:askap')
+        },
         method: 'GET',
         url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
         type: 'POST',
