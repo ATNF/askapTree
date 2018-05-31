@@ -7,7 +7,6 @@ module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.loadNpmTasks('grunt-execute');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.initConfig({
@@ -28,7 +27,7 @@ module.exports = function(grunt) {
             },
             pluginDef: {
                 expand: true,
-                src: [ 'plugin.json', 'README.md' ],
+                src: ['README.md' ],
                 dest: 'dist',
             },
         },

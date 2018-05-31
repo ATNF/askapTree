@@ -1,0 +1,24 @@
+{
+  "type": "panel",
+  "name": "ASKAP Tree",
+  "id": "stuartbuchan-tree-panel",
+
+  "info": {
+    "description": "ASKAP tree hierarchy plugin for Grafana",
+    "author": {
+      "name": "Stuart Buchan"
+    },
+    "keywords": ["tree", "panel"],
+    "logos": {
+            "small": "img/logo.png",
+            "large": "img/logo.png"
+        },
+    "version": "1.0.0",
+    "updated": "2017-12-18"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": [ ]
+  }
+}
