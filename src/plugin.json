@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "ASKAP Tree",
-  "id": "stuartbuchan-tree-panel",
+  "id": "atnf-tree-panel",
 
   "info": {
     "description": "ASKAP tree hierarchy plugin for Grafana",

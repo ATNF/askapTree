@@ -40,7 +40,7 @@ var seriesName = 'argName';
 
 dashboard.panels.push({
         title: 'ASKAP Tree',
-        type: 'stuartbuchan-tree-panel',
+        type: 'atnf-tree-panel',
         fill: 1,
         linewidth: 2,
         "gridPos": {

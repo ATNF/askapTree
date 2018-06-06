@@ -1,10 +1,10 @@
 {
-  "name": "AskapTree",
-  "version": "1.0.0",
+  "name": "atnf-tree-panel",
+  "version": "1.0.1",
   "description": "ASKAP hierarchy panel for Grafana",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ATNF/askapTree"
+    "url": "https://github.com/ATNF/atnf-tree-panel"
   },
   "main": "src/module.js",
   "scripts": {
