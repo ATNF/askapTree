@@ -21,7 +21,7 @@ var dashboard;
 
 // Initialize a skeleton with nothing but a rows array and service object
 dashboard = {
-  rows : [],
+  panels : []
 };
 
 // Set a title
@@ -38,36 +38,34 @@ dashboard.time = {
 var rows = 1;
 var seriesName = 'argName';
 
-dashboard.rows.push({
-    title: 'ASKAP Tree',
-    //height: '300px',
-    panels: [
-      {
+dashboard.panels.push({
         title: 'ASKAP Tree',
         type: 'stuartbuchan-tree-panel',
-        span: 12,
         fill: 1,
         linewidth: 2,
+        "gridPos": {
+            "h": 23,
+            "w": 24,
+            "x": 0,
+            "y": 0
+        },
         tooltip: {
           shared: true
         }
-      }
-    ]
 });
 
-dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lookup name"
-    title: 'Chart',
-    height: '20px',
-    panels: [
-        {
+dashboard.panels.push({ // Simply create a panel displaying the text "Failed to lookup name"
             title: "Usage",
             type: 'text',
-            span: 12,
             fill: 1,
+            "gridPos": {
+                "h": 5,
+                "w": 9,
+                "x": 0,
+                "y": 23
+            },
             mode: "markdown",
             content: "* Click on nodes to drill towards a measurement point in that branch.\n* Upon reaching a field to plot at the end of a branch (signified by the text appearing to the right of the node), left clicking will launch a time series plot in a new tab. Right clicking will launch a discrete time plot in a new tab.\n* Holding down control and left clicking on a node will issue an alert containing a URL to the location of the node clicked on. Pasting this URL into your browser will navigate automatically to this location."
-        }
-    ]
 });
 
 

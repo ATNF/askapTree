@@ -26,7 +26,7 @@ return function(callback) {
 
     // Intialize a skeleton with nothing but a rows array and service object
     dashboard = {
-        rows : [],
+        panels : [],
         services : {}
     };
 
@@ -206,11 +206,7 @@ return function(callback) {
             groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
         }    
 
-        dashboard.rows.push({
-            "collapse": false,
-            "height": "250px",
-            "panels": [
-                {
+        dashboard.panels.push({
                     "aliasColors": {},
                     "bars": false,
                     "datasource": "ASKAP",
@@ -218,6 +214,12 @@ return function(callback) {
                     "error": false,
                     "fill": 0,
                     "grid": {},
+                    "gridPos": {
+                        "h": 9,
+                        "w": 24,
+                        "x": 0,
+                        "y": 0
+                    },
                     "id": 1,
                     "legend": {
                         "avg": false,
@@ -301,23 +303,15 @@ return function(callback) {
                         "show": true
                         }
                     ]
-                }
-            ],
-            "repeat": null,
-            "repeatIteration": null,
-            "repeatRowId": null,
-            "showTitle": false,
-            "title": "Row",
-            "titleSize": "h6",
         });
 
         // If the plot type is graph, add mean() to the select field
         if(plotType == "graph") {
-            dashboard.rows[0]["panels"][0]["targets"][0]["groupBy"].push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
+            dashboard.panels[0]["targets"][0]["groupBy"].push({"params": [ "null" ], "type": "fill" }); // Push the fill(null) Group By to Grafana
             meanObj = new Object();
             meanObj.params = [];
             meanObj.type = "mean";
-            dashboard.rows[0]["panels"][0]["targets"][0]["select"][0].push(meanObj);
+            dashboard.panels[0]["targets"][0]["select"][0].push(meanObj);
         }
 
         // Make a comma seperated string for the tag aliases to increase readability of the plot
@@ -329,7 +323,7 @@ return function(callback) {
             }
         }
 
-        dashboard.rows[0]["panels"][0]["targets"][0].alias = aliasString; // Populate empty field with the generate alias string
+        dashboard.panels[0]["targets"][0].alias = aliasString; // Populate empty field with the generate alias string
 
         // Push a panel beneath the plot allowing the user to quickly jump to a discrete plot of the same measurement
         if(plotType == "graph") {
@@ -345,35 +339,28 @@ return function(callback) {
         url = window.location.href; // Grab the URL as a string
         url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
 
-        dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lookup name"
-            title: 'Chart',
-            height: '20px',
-            panels: [
-                {
+        dashboard.panels.push({ // Simply create a panel displaying the text "Failed to lookup name"
                     title: "",
                     type: 'text',
-                    span: 12,
+                    "gridPos": {
+                        "h": 3,
+                        "w": 24,
+                        "x": 0,
+                        "y": 9
+                    },
                     fill: 1,
                     mode: "html",
                     content: "<p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"&dispOpt="+dispOpt+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
-                }
-            ]
         });;
         callback(dashboard); // Return the completed dashboard
 
     }).fail(function(result) { // If the call to the database failed, handle the error
-        dashboard.rows.push({ // Simply create a panel displaying the text "Failed to lookup name"
-            title: 'Chart',
-            height: '300px',
-            panels: [
-                {
+        dashboard.panels.push({ // Simply create a panel displaying the text "Failed to lookup name"
                     title: "Error",
                     type: 'text',
                     span: 12,
                     fill: 1,
                     content: 'Failed to lookup name'
-                }
-            ]
         });
 
         callback(dashboard); // Return the error dashboard
