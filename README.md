@@ -1,9 +1,6 @@
-<p >
-    <h1 align="center">Australian Square Kilometer Array Pathfinder Telescope</h1>
-</p>
-<p >
-    <h2 align="center">Hierarchy Representation</h2>
-</p>
+# Australian Square Kilometer Array Pathfinder
+# Control & Monitoring Hierarchy Representation
+
 This panel plugin for Grafana allows the user to graphically drill down to the exact measurement point desired in the ASKAP influxDB database. It is intended to be used with scripted dashboards, and hence a node with no sprouting children will link to a scripted dashboard to view the desired measurement.
 
 ## Features
@@ -28,4 +25,4 @@ This panel plugin for Grafana allows the user to graphically drill down to the e
 
 This plugin relies on source code from the following d3 example:
 
-* https://bl.ocks.org/d3noob/43a860bc0024792f8803bba8ca0d5ecd#index.html
+* [Collapsible tree diagram in v4](https://bl.ocks.org/d3noob/43a860bc0024792f8803bba8ca0d5ecd#index.html)
