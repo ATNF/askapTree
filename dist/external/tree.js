@@ -13,6 +13,9 @@ $(document).keydown(function(event) {
 //});
 
 function makeTree(cont) {
+
+    var xoffset = 30;
+
 // Initialise the tree with the subsystems to be populated by call to influxDB
     $.ajax( {
         xhdrFields: {
@@ -253,7 +256,7 @@ function makeTree(cont) {
                 .attr("height", height + margin.top + margin.bottom)
               .append("g")
                 .attr("transform", "translate("
-                  + margin.left + "," + margin.top + ")");
+                  + (margin.left + xoffset) + "," + margin.top + ")");
 
             window.i = 0,
                 duration = 750,
