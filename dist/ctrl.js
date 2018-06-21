@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './css/tree.css!', './external/tree'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './external/tree'], function (_export, _context) {
     "use strict";
 
-    var MetricsPanelCtrl, _, $, d3, _createClass, treePanelCtrl;
+    var MetricsPanelCtrl, loadPluginCss, _, $, d3, _createClass, treePanelCtrl;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -38,13 +38,14 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
     return {
         setters: [function (_appPluginsSdk) {
             MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
+            loadPluginCss = _appPluginsSdk.loadPluginCss;
         }, function (_lodash) {
             _ = _lodash.default;
         }, function (_jquery) {
             $ = _jquery.default;
         }, function (_externalD3Min) {
             d3 = _externalD3Min;
-        }, function (_cssTreeCss) {}, function (_externalTree) {}],
+        }, function (_externalTree) {}],
         execute: function () {
             _createClass = function () {
                 function defineProperties(target, props) {
@@ -67,6 +68,10 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
             // Include the d3 library
             window.d3 = d3;
             //console.log(d3);
+            loadPluginCss({
+                dark: 'plugins/atnf-tree-panel/css/dark.css',
+                light: 'plugins/atnf-tree-panel/css/light.css'
+            });
 
             _export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_MetricsPanelCtrl) {
                 _inherits(treePanelCtrl, _MetricsPanelCtrl);
