@@ -263,7 +263,7 @@ function makeTree(cont) {
                 window.root;
 
             // declares a tree layout and assigns the size
-            window.treemap = d3.tree().size([height-30, width]);
+            window.treemap = d3.tree().size([2*height/3, width]);
 
             // Assigns parent, children, height, depth
             root = d3.hierarchy(treeData, function(d) { return d.children; });
