@@ -1,4 +1,4 @@
-import {MetricsPanelCtrl} from 'app/plugins/sdk';
+import {PanelCtrl} from 'app/plugins/sdk';
 import { loadPluginCss } from 'app/plugins/sdk';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -11,15 +11,24 @@ loadPluginCss({
 });
 import './external/tree'; // Include the sample d3 hierarchy code
 
-class treePanelCtrl extends MetricsPanelCtrl {
+const panelDefaults = {
+    influxHost: '',
+    database : '',
+    username: '',
+    password: '',
+    treeName: ''
+};
+class treePanelCtrl extends PanelCtrl {
     constructor($scope, $injector) {
         super($scope, $injector);
-//        _.defaults(this.panel, panelDefaults);
+        _.defaults(this.panel, panelDefaults);
         this.panelContainer = null;
         this.panel.svgContainer = null;
         this.treeObj = null;
         this.panel.treeDivId = 'tree_svg_' + this.panel.id;
         this.containerDivId = 'container_' + this.panel.treeDivId;
+
+        this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     }
 
     setContainer(container) {
@@ -33,7 +42,11 @@ class treePanelCtrl extends MetricsPanelCtrl {
         var container = treeByClass[0].childNodes[0];
         this.setContainer(container);
         //console.log("Calling makeTree function");
-        this.treeObj = new makeTree(this.panelContainer);
+        this.treeObj = new makeTree(this.panelContainer, this.panel);
+    }
+
+    onInitEditMode() {
+        this.addEditorTab('Options', 'public/plugins/atnf-tree-panel/editor.html', 2);
     }
 }
 
