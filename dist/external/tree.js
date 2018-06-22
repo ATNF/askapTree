@@ -12,8 +12,8 @@ $(document).keydown(function(event) {
 //        ctrlPressed = false;
 //});
 
-function makeTree(cont) {
-
+function makeTree(cont, options) {
+    var influxHost = influxHost;
     var xoffset = 30;
 
 // Initialise the tree with the subsystems to be populated by call to influxDB
@@ -22,16 +22,16 @@ function makeTree(cont) {
             withCredentials : true
         },
         headers: {
-            'Authorization' : 'Basic ' + btoa('askap:askap')
+            'Authorization' : 'Basic ' + btoa(options.username + ':' + options.password)
         },
         method: 'GET',
-        url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
+        url: options.influxHost + "/query?pretty=true",
         type: 'POST',
-        data: { db: 'askap', q:'show series from "metadata.toc"'}, // Gets the tree structure information down to measurement name in a json object
+        data: { db: options.database, q:'show series from "metadata.toc"'}, // Gets the tree structure information down to measurement name in a json object
         datatype: 'json'
     }).done(function(result) { 
         window.treeData = {
-            "name": "ASKAP",
+            "name": options.treeName,
             "children": []
         };
 
@@ -231,7 +231,7 @@ function makeTree(cont) {
                 treeData["children"][loc]["children"][locL2]["children"][locMeas-1]["children"].push(tempObj);
             }
             //console.log(locMeas);
-            getField(measurement, loc, locL2, locMeas-1); // Passes control to a function to grab the field keys from the database and append it to the correct location
+            getField(options, measurement, loc, locL2, locMeas-1); // Passes control to a function to grab the field keys from the database and append it to the correct location
             
             // Reset variables to recycle for next loop iteration.
             measurement = null;
@@ -263,7 +263,7 @@ function makeTree(cont) {
                 window.root;
 
             // declares a tree layout and assigns the size
-            window.treemap = d3.tree().size([height-30, width]);
+            window.treemap = d3.tree().size([2*height/3, width]);
 
             // Assigns parent, children, height, depth
             root = d3.hierarchy(treeData, function(d) { return d.children; });
@@ -337,18 +337,18 @@ function checkChildren(children, nodeName) {
 // getField takes in four variables - the name of the measurement just allocated space on the tree for, the location of the parent of the branch on level 1, the location of the parent
 // on level 2, and the location of the measurement. The purpose of the function is to append the field key data to the correct measurement name. It initially places a jquery request 
 // to grab the field keys for the measurement in a json object from the database.
-function getField(measurement, loc, locL2, locMeas) {
+function getField(options, measurement, loc, locL2, locMeas) {
     $.ajax( {
         xhdrFields: {
             withCredentials : true
         },
         headers: {
-            'Authorization' : 'Basic ' + btoa('askap:askap')
+            'Authorization' : 'Basic ' + btoa(options.username + ':' + options.password)
         },
         method: 'GET',
-        url: "http://akingest01.atnf.csiro.au:8086/query?pretty=true",
+        url: options.influxHost + "/query?pretty=true",
         type: 'POST',
-        data: { db: 'askap', q:'show field keys from "'+measurement+'"'},
+        data: { db: options.database, q:'show field keys from "'+measurement+'"'},
         datatype: 'json'
     }).done(function(result) {
         var tempObj = null;
@@ -642,7 +642,7 @@ function getPath(d) {
     var leaf = true;
     var newURL = "";
 
-    while(currentNode["data"]["name"] != "ASKAP") {
+    while(currentNode["data"]["name"].parent != null) {
         // leaf is used to ignore inserting a comma if it is the bottom level node
         if(leaf) {
             path = currentNode["data"]["name"]+path;

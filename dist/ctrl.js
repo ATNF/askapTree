@@ -3,7 +3,7 @@
 System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './external/tree'], function (_export, _context) {
     "use strict";
 
-    var MetricsPanelCtrl, loadPluginCss, _, $, d3, _createClass, treePanelCtrl;
+    var PanelCtrl, loadPluginCss, _, $, d3, _createClass, panelDefaults, treePanelCtrl;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -37,7 +37,7 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
 
     return {
         setters: [function (_appPluginsSdk) {
-            MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
+            PanelCtrl = _appPluginsSdk.PanelCtrl;
             loadPluginCss = _appPluginsSdk.loadPluginCss;
         }, function (_lodash) {
             _ = _lodash.default;
@@ -72,21 +72,30 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
                 dark: 'plugins/atnf-tree-panel/css/dark.css',
                 light: 'plugins/atnf-tree-panel/css/light.css'
             });
+            panelDefaults = {
+                influxHost: '',
+                database: '',
+                username: '',
+                password: '',
+                treeName: ''
+            };
 
-            _export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_MetricsPanelCtrl) {
-                _inherits(treePanelCtrl, _MetricsPanelCtrl);
+            _export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_PanelCtrl) {
+                _inherits(treePanelCtrl, _PanelCtrl);
 
                 function treePanelCtrl($scope, $injector) {
                     _classCallCheck(this, treePanelCtrl);
 
                     var _this = _possibleConstructorReturn(this, (treePanelCtrl.__proto__ || Object.getPrototypeOf(treePanelCtrl)).call(this, $scope, $injector));
 
-                    //        _.defaults(this.panel, panelDefaults);
+                    _.defaults(_this.panel, panelDefaults);
                     _this.panelContainer = null;
                     _this.panel.svgContainer = null;
                     _this.treeObj = null;
                     _this.panel.treeDivId = 'tree_svg_' + _this.panel.id;
                     _this.containerDivId = 'container_' + _this.panel.treeDivId;
+
+                    _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
                     return _this;
                 }
 
@@ -104,12 +113,17 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
                         var container = treeByClass[0].childNodes[0];
                         this.setContainer(container);
                         //console.log("Calling makeTree function");
-                        this.treeObj = new makeTree(this.panelContainer);
+                        this.treeObj = new makeTree(this.panelContainer, this.panel);
+                    }
+                }, {
+                    key: 'onInitEditMode',
+                    value: function onInitEditMode() {
+                        this.addEditorTab('Options', 'public/plugins/atnf-tree-panel/editor.html', 2);
                     }
                 }]);
 
                 return treePanelCtrl;
-            }(MetricsPanelCtrl)));
+            }(PanelCtrl)));
 
             treePanelCtrl.templateUrl = 'partials/template.html';
 
