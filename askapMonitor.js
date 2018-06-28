@@ -39,6 +39,7 @@ return function(callback) {
     };
     dashboard.timezone = "browser";
 
+    var database = "";
     var meas = ""; // Used to hold the measurement argument passed in via the URL
     var field = ""; // Used to hold the field argument passed in via the URL
     var plotType = ""; // Used to hold the argument specifying what type of panel to make
@@ -76,6 +77,10 @@ return function(callback) {
 
     if(!_.isUndefined(ARGS.dispOpt)) {
         dispOpt = ARGS.dispOpt;
+    }
+
+    if(!_.isUndefined(ARGS.database)) {
+        database = ARGS.database;
     }
 
     // Switch based on the display option parameter passed in via the URL. Following the convention stated in tree.js, 0 signifies points only. 1 signifies lines only.
@@ -209,7 +214,7 @@ return function(callback) {
         dashboard.panels.push({
                     "aliasColors": {},
                     "bars": false,
-                    "datasource": "ASKAP",
+                    "datasource": database,
                     "editable": true,
                     "error": false,
                     "fill": 0,
@@ -371,7 +376,7 @@ return function(callback) {
 // dropDownGen takes three arguments - the tag key to select values from, the measurement value, and the status of the
 // incrementor loop this function is called from. It returns an object with three elements. Descriptions for these 
 // elements can be seen in their usage in the above function.
-function dropDownGen(key, meas, i) {
+function dropDownGen(key, database, meas, i) {
     var withoutQs = key; // Used to hold the altered keyname without question marks for the templating name
     // Strip ??? from badly named tag keys until a workaround is made
     if(key.includes("?")) {
@@ -386,7 +391,7 @@ function dropDownGen(key, meas, i) {
                 "text": "", //All
                 "value": [ "ak01" ] // Default to display all keys on page load $_all
             },
-            "datasource": "ASKAP",
+            "datasource": database,
             "hide": 0,
             "includeAll": true,
             "label": withoutQs,

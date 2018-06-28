@@ -360,6 +360,7 @@ function getField(options, measurement, loc, locL2, locMeas) {
             // Cycle through all of the field values
             for(i=0; i<field.length; i++) {
                 tempObj = new Object();
+                tempObj.database = options.database;
                 tempObj.name = field[i][0];    
                 tempObj.meas = measurement; // Store measurement name (parent) in the node so the information is available to create a dashboard on click.
             
@@ -628,7 +629,7 @@ function update(source) {
   function rightClick(d) {
       event.preventDefault();
       if((d.children == null) && (d._children == null)) {
-         launchDash(d["data"]["name"], d["data"]["meas"], "coprglory-discrete-panel", getOptions());
+         launchDash(d["data"]["name"], d["data"]["meas"], d["data"]["database"], "coprglory-discrete-panel", getOptions());
       } 
   } 
 }
@@ -674,7 +675,7 @@ function click(d) {
         d._children = null;
         if(d.children == null) { // If the node clicked is a leaf node, need to generate a scripted dashboard
             // Need to check the state of the URL to see what display options have been selected  to send to the graph. This is done through getOptions().
-            launchDash(d["data"]["name"], d["data"]["meas"], "graph", getOptions()); // Passes control to a function that opens the desired dashboard in a new tab.
+            launchDash(d["data"]["name"], d["data"]["meas"], d["data"]["database"], "graph", getOptions()); // Passes control to a function that opens the desired dashboard in a new tab.
         }
     }
     update(d);
@@ -719,9 +720,9 @@ function getOptions() {
 // launchDash takes in two variables - the name of the field, and the name of the measurement. These variables are used to create a scripted dashboard URL, which the user is
 // then linked to.
 
-function launchDash(field, meas, type, displayOption) {
+function launchDash(field, meas, database, type, displayOption) {
     // The scripted dashboard will be run on the same server as the user, therefore can grab the current URL and use that to link the user to the correct location
     var url = window.location.href; // Grab the URL as a string
     url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
-    window.open(url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+type+"&dispOpt="+displayOption);
+    window.open(url+"/dashboard/script/askapMonitor.js?database="+database+"&meas="+meas+"&field="+field+"&plotType="+type+"&dispOpt="+displayOption);
 }
