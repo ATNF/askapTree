@@ -46,6 +46,8 @@ return function(callback) {
     var dispOpt = ""; // Used ot hold the argument specifying how the user wishes to view the plot
     var tags = []; // Used to hold the valid tag keys for the measurement grabbed from the jquery call
     var groupBy = []; // Populated later in this file to be pushed to the dashboard
+    var rawQuery = false;
+    var query = "";
     var sourceType = "auto";
     var dataSource = "auto";
     var format = "short";
@@ -199,17 +201,28 @@ return function(callback) {
         ]};
 
         // set a title
-        dashboard.title = result["desc"];
+        if ( "measurement" in result) {
+            // empty measurement field indicates
+            // failed lookup.  need to fix lookup
+            // service to better indicate failure.
+            dashboard.title = meas;
+            // don't know the tag set just group by all
+            rawQuery = true;
+            query = "SELECT mean(\"" + field + "\") FROM \"" + meas + "\" where $timeFilter GROUP BY time($ti), *";
+        }
+        else {
+            dashboard.title = result["desc"];
+            // Need to push all of the dropdown lists to the dashboard on top of the plot.
+            // It returns an array of three elements - the first is to be pushed to dashboard, the second to tags and the third to groupBy.
+            for(var i=0; i<tagKeys.length; i++) {
+                dropDown = dropDownGen(tagKeys[i], database, meas, i); // Pass control to dropDownGen function to make needed elements.
+                dashboard.templating.list.push (dropDown[0]); // Push drop down list to top of dashboard.
+                tags.push (dropDown[1]); // Push information to Grafana telling it to update tags based on dropdown list value.
+                groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
+            }
+        }
         dashboard.hideControls = true;
 
-        // Need to push all of the dropdown lists to the dashboard on top of the plot.
-        // It returns an array of three elements - the first is to be pushed to dashboard, the second to tags and the third to groupBy.
-        for(var i=0; i<tagKeys.length; i++) {
-            dropDown = dropDownGen(tagKeys[i], meas, i); // Pass control to dropDownGen function to make needed elements.
-            dashboard.templating.list.push (dropDown[0]); // Push drop down list to top of dashboard.
-            tags.push (dropDown[1]); // Push information to Grafana telling it to update tags based on dropdown list value.
-            groupBy.push (dropDown[2]); // Push information to Grafana telling it to group by the valid tag set returned by the jquery.
-        }    
 
         dashboard.panels.push({
                     "aliasColors": {},
@@ -260,6 +273,8 @@ return function(callback) {
                             "policy": "default",
                             "refId": "A",
                             "resultFormat": "time_series",
+                            "rawQuery": rawQuery,
+                            "query": query,
                             "select": [
                                 [
                                     {
@@ -276,7 +291,7 @@ return function(callback) {
                     "thresholds": [],
                     "timeFrom": null,
                     "timeShift": null,
-                    "title": result["desc"],
+                    "title": dashboard.title,
                     "tooltip": {
                         "msResolution": true,
                         "shared": true,
