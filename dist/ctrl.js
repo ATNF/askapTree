@@ -3,7 +3,7 @@
 System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './external/tree'], function (_export, _context) {
     "use strict";
 
-    var PanelCtrl, loadPluginCss, _, $, d3, _createClass, panelDefaults, treePanelCtrl;
+    var MetricsPanelCtrl, loadPluginCss, _, $, d3, _createClass, panelDefaults, treePanelCtrl;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -37,7 +37,7 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
 
     return {
         setters: [function (_appPluginsSdk) {
-            PanelCtrl = _appPluginsSdk.PanelCtrl;
+            MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
             loadPluginCss = _appPluginsSdk.loadPluginCss;
         }, function (_lodash) {
             _ = _lodash.default;
@@ -80,8 +80,8 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
                 treeName: ''
             };
 
-            _export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_PanelCtrl) {
-                _inherits(treePanelCtrl, _PanelCtrl);
+            _export('MetricsPanelCtrl', _export('treePanelCtrl', treePanelCtrl = function (_MetricsPanelCtrl) {
+                _inherits(treePanelCtrl, _MetricsPanelCtrl);
 
                 function treePanelCtrl($scope, $injector) {
                     _classCallCheck(this, treePanelCtrl);
@@ -112,6 +112,9 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
                         treeByClass.append('<div if="' + this.containerDivId + '"></div>');
                         var container = treeByClass[0].childNodes[0];
                         this.setContainer(container);
+                        var templateSrv = this.templateSrv;
+                        this.panel.displayOptions = templateSrv.replace("$displayOptions");
+
                         //console.log("Calling makeTree function");
                         this.treeObj = new makeTree(this.panelContainer, this.panel);
                     }
@@ -123,7 +126,7 @@ System.register(['app/plugins/sdk', 'lodash', 'jquery', './external/d3.min', './
                 }]);
 
                 return treePanelCtrl;
-            }(PanelCtrl)));
+            }(MetricsPanelCtrl)));
 
             treePanelCtrl.templateUrl = 'partials/template.html';
 

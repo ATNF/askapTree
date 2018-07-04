@@ -1,4 +1,4 @@
-import {PanelCtrl} from 'app/plugins/sdk';
+import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import { loadPluginCss } from 'app/plugins/sdk';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -18,7 +18,7 @@ const panelDefaults = {
     password: '',
     treeName: ''
 };
-class treePanelCtrl extends PanelCtrl {
+class treePanelCtrl extends MetricsPanelCtrl {
     constructor($scope, $injector) {
         super($scope, $injector);
         _.defaults(this.panel, panelDefaults);
@@ -41,6 +41,9 @@ class treePanelCtrl extends PanelCtrl {
         treeByClass.append('<div if="'+this.containerDivId+'"></div>');
         var container = treeByClass[0].childNodes[0];
         this.setContainer(container);
+        var templateSrv = this.templateSrv;
+        this.panel.displayOptions = templateSrv.replace("$displayOptions");
+        
         //console.log("Calling makeTree function");
         this.treeObj = new makeTree(this.panelContainer, this.panel);
     }

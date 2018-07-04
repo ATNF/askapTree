@@ -51,6 +51,7 @@ return function(callback) {
     var sourceType = "auto";
     var dataSource = "auto";
     var format = "short";
+    var lines = true;
     var points = true; // Default to having points displayed
     var pointMode = "null"; // Default to not having the points connected
     var pointRadius = 1;
@@ -89,15 +90,18 @@ return function(callback) {
     // 2 signifies both points and lines.
     switch(dispOpt) {
         case "0":
+            lines = false;
             points = true;
             pointMode = "null";
             break;
         case "1":
             points = false;
+            lines = true;
             pointMode = "connected";
             break;
         case "2":
             points = true;
+            lines = true;
             pointMode = "connected";
             break;
         default:
@@ -248,7 +252,7 @@ return function(callback) {
                         "total": false,
                         "values": true
                     },
-                    "lines": true,
+                    "lines": lines,
                     "line1idth": 1,
                     "links": [],
                     "nullPointMode": pointMode,
@@ -347,11 +351,11 @@ return function(callback) {
 
         // Push a panel beneath the plot allowing the user to quickly jump to a discrete plot of the same measurement
         if(plotType == "graph") {
-            newType = "coprglory-discrete-panel";
+            newType = "natel-discrete-panel";
             otherPlotName = "discrete time plot";
         }
 
-        else if(plotType == "coprglory-discrete-panel") {
+        else if(plotType == "natel-discrete-panel") {
             newType = "graph";
             otherPlotName = "time series graph"
         }

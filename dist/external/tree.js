@@ -1,6 +1,7 @@
 // Monitor for presses of the control key for giving the user tree location on node click
 hover = false; // Initialise globally that the mouse is not hovering an element
 pathNode = null; // Initialise globally the value to store the node the user is attempting to grab the path of
+displayOptions = "";
 $(document).keydown(function(event) {
     if(event.which=="76")
         if(hover) {
@@ -15,6 +16,8 @@ $(document).keydown(function(event) {
 function makeTree(cont, options) {
     var influxHost = influxHost;
     var xoffset = 30;
+
+    displayOptions = options.displayOptions;
 
 // Initialise the tree with the subsystems to be populated by call to influxDB
     $.ajax( {
@@ -359,6 +362,12 @@ function getField(options, measurement, loc, locL2, locMeas) {
 
             // Cycle through all of the field values
             for(i=0; i<field.length; i++) {
+                if (field[i][0].endsWith("_double") || field[i][0].endsWith("_float") || field[i][0].endsWith("_integer") || field[i][0].endsWith("_string")) {
+                    continue;
+                }
+                if (i>0 && field[i][0] == field[i-1][0]) {
+                    continue;
+                }
                 tempObj = new Object();
                 tempObj.database = options.database;
                 tempObj.name = field[i][0];    
@@ -629,7 +638,7 @@ function update(source) {
   function rightClick(d) {
       event.preventDefault();
       if((d.children == null) && (d._children == null)) {
-         launchDash(d["data"]["name"], d["data"]["meas"], d["data"]["database"], "coprglory-discrete-panel", getOptions());
+         launchDash(d["data"]["name"], d["data"]["meas"], d["data"]["database"], "natel-discrete-panel", getOptions());
       } 
   } 
 }
@@ -688,33 +697,42 @@ function click(d) {
 // The returned string is therefore an integer representing the state of the template value with the following convention:
 // 0 - Points only | 1 - Lines only | 2 - Points and lines
 function getOptions() {
-    var displayOptions = [];
-    var retVal = "0";
     var url = new URL(window.location.href);
-    var params = new URLSearchParams(url.search.replace("orgId=1&", "")); // Can discard the orgId param
+    var dots = false;
+    var lines = false;
 
-    for(let p of params) {
-        displayOptions.push(p[1]);
-    }
-
-    if(displayOptions.length == 2) {
-        retVal = "2";
-    }
-
-    else if(displayOptions.length == 1) {
-        switch(displayOptions[0]) {
+    // check user selection (need to get event to controller)
+    for(var p of url.searchParams.getAll("var-displayOptions")) {
+        switch(p) {
             case "Dots":
-                retVal = "0";
+                dots = true;
                 break;
             case "Lines":
-                retVal = "1";
+                lines = true;
                 break;
             default:
                 break;
         }
     }
-
-    return retVal;
+    if (!dots && !lines) {
+        // check inital options from variables
+         if ( displayOptions.search("Lines") > -1) {
+            lines = true;
+        }
+        if ( displayOptions.search("Dots") > -1) {
+            dots = true;
+        }
+    }
+    if ( dots && lines) {
+        return "2";
+    }
+    else if (lines) {
+        return "1";
+    }
+    else {
+        // dots
+        return "0";
+    }
 }
 
 // launchDash takes in two variables - the name of the field, and the name of the measurement. These variables are used to create a scripted dashboard URL, which the user is
