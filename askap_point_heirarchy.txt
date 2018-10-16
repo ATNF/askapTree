@@ -1,0 +1,135 @@
+.h1 Antenna
+    .h2 Composite 
+        ade.composite               - Antenna Composite
+
+    .h2 Drives
+        servo                       - Antenna Drives Info
+        servo.axis                  - Antenna Motors
+        servo.coords                - Antenna Coordinates
+
+    .h2 Timing Summary
+        ade.timing.summary          - Timing Summary
+
+    .h2 Timing  - LRD
+        ade.timing.lrd.current  - LRD Supply Currents
+        ade.timing.lrd.fans     - LRD Fans
+        ade.timing.lrd.optical  - LRD Optical
+        ade.timing.lrd.power    - LRD Power
+        ade.timing.lrd.status   - LRD Status
+        ade.timing.lrd.temps    - LRD Temperatures
+        ade.timing.lrd.voltage  - LRD Supply Voltages
+
+    .h2 Timing - TRD
+        ade.timing.trd.current  - TRD Supply Currents
+        ade.timing.trd.fans     - TRD Fans
+        ade.timing.trd.optical  - TRD Optical
+        ade.timing.trd.power    - TRD Power
+        ade.timing.trd.status   - TRD Status
+        ade.timing.trd.temps    - TRD Temperatures
+        ade.timing.trd.voltage  - TRD Supply Voltages
+
+    .h2 PAF
+        dryair                  - PAF Dryair
+        ade.paf.RF              - PAF RF Currents
+        ade.paf.current         - PAF Supply Currents
+        ade.paf.fans            - FEC Fans
+        ade.paf.humidity        - PAF Humidity
+        ade.paf.power           - PAF RF Power
+        ade.paf.status          - PAF Status
+        ade.paf.summary         - PAF Summary
+        ade.paf.tec.current     - N/A
+        ade.paf.tec.monitor     - PAF TEC Voltage & Current Monitor
+        ade.paf.tec.setpoint    - PAF TEC Setpoint
+        ade.paf.tec.voltage     - N/A
+        ade.paf.temps           - PAF Temperatures
+        ade.paf.voltage         - PAF Supply Voltages
+
+    .h2 Digital Receiver
+        ade.drx.RF              - Digital Receiver RF Power
+        ade.drx.current         - Digital Reciever Supply Currents
+        ade.drx.fans            - Digital Receiver Fans
+        ade.drx.power           - Digital Receiver RF Power
+        ade.drx.status          - Digital Receiver Status
+        ade.drx.summary         - Digital Receiver Summary
+        ade.drx.synth           - Digital Receiver Sythesiser
+        ade.drx.temps           - Digital Receiver Temperatures
+        ade.drx.voltage         - Digital Recevier Voltages
+
+    .h2 Beamformer
+        ade.bmf.RF              - Beamformer RF Power
+        ade.bmf.current         - Beamformer Supply Currents
+        ade.bmf.fans            - Beamformer Fans
+        ade.bmf.power           - Beamformer Tx Power
+        ade.bmf.status          - Beamformer Status
+        ade.bmf.summary         - Beamformer Summary
+        ade.bmf.temps           - Beamformer Temperatures
+        ade.bmf.voltage         - Beamformer Supply Voltages
+
+    .h2 Antenna Power
+        power.ant               - Power Meter
+        power.ant.control       - N/A
+        power.switchboard       - Switchboard PLC
+        misc.pedestalRack       - N/A
+
+.h1 Correlator
+    ade.cor.RF                  - Correlator RF Power
+    ade.cor.correlations        - Correaltor Counts
+    ade.cor.current             - Correlator Supply Currents
+    ade.cor.fans                - Correlator Fans
+    ade.cor.power               - Correlator Power
+    ade.cor.status              - Correlator Status
+    ade.cor.summary             - Correlator Summary
+    ade.cor.temps               - Correlator Temperatures
+    ade.cor.voltage             - Correaltor Voltages
+    .h2 Timing - TRD
+        ade.timing.cor.trd.current  - TRD Supply Currents
+        ade.timing.cor.trd.fans     - TRD Fans
+        ade.timing.cor.trd.optical  - TRD Optical
+        ade.timing.cor.trd.power    - TRD Power
+        ade.timing.cor.trd.status   - TRD Status
+        ade.timing.cor.trd.temps    - TRD Temperatures
+        ade.timing.cor.trd.voltage  - TRD Supply Voltages
+
+.h1 Composite
+    ak.ade.composite            - Site Composite
+    cor.ade.composite           - Correlator Composite
+
+.h1 Timing
+    misc.clock                  - Timing ATDC
+    misc.maser                  - Maser
+
+.h1 Ingest
+    cp.manager.ingest           - CP Manager
+    cp.ingest                   - Ingest 
+    cp.ingest.obs               - Ingest Observation
+
+.h1 Scheduling Blocks
+    schedblock                  - Scheduling Block
+    schedblock.target           - Target
+    schedblock.target.beams     - Beams
+    schedblock.target.footprint - Footprint
+
+.h1 Rack Power
+    power.pdu                   - Rack PDU
+    power.pdu.system            - Rack PDU System
+    power.pdu.system.features   - Rack PDU Features
+    power.pdu.tower             - Rack Tower
+ 
+.h1 Environment
+    environment.weather         - Weather Station
+
+.h1 metadata
+    fieldgroups.ade.bmf.current
+    fieldgroups.ade.bmf.fans
+    fieldgroups.ade.bmf.temps
+    fieldgroups.ade.bmf.voltage
+    fieldgroups.ade.paf.temps
+
+.h1 hidden 
+    ade.paf.%V
+    lustre.files
+    lustre.kbytes
+    lustre.llite.stats
+    lustre.mdc.stats
+    lustre.osc.stats
+    lustre2

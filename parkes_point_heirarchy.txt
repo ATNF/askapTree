@@ -1,0 +1,118 @@
+.h1 Antenna
+    antenna.64m.drivealarms
+    antenna.64m.mcp
+    antenna.64m
+    antenna.64m.lube
+    antenna.64m.vib
+
+.h1 LO
+    LO.stationref
+    LO.synth
+    LO.synth.control
+    LO.synth.status
+
+.h1 Alarms
+    alarms
+    alarms.FROG
+    alarms.MCP
+    alarms.TPS
+
+.h1 Power
+    drive.power.ups.thycon
+    maser.power.switchboards
+    power.UMT1
+    power.switchboards
+    power.ups.other
+    rackj.misc.level2.rackJ.power
+    power
+    power.control
+
+    .h2 Genset
+        power.genhutMC
+        power.genset.GCP31
+        power.genset.LS4
+        power.genset.control
+        power.hv
+        power.ups.thycon
+
+.h1 Timing
+    misc.clock
+    .h2 Maser
+        pkmasera.misc.maser.vremya.ahm
+        pkmasera.misc.maser.vremya.ahmpower
+        pkmasera.misc.maser.vremya.ctrl
+        pkmasera.misc.maser.vremya.pll
+        pkmasertemp.misc.maser.temp
+
+.h1 Focus Cabin
+    pkfcpwr.misc.fcpower
+    pkfcpwr.misc.fcpower.control
+
+
+.h1 Backend
+    backend.bec
+    backend.mars
+    backend.rack3ASD
+    cal.ccu
+
+.h1 Conversion
+    conversion
+    conversion.CXX
+    conversion.MBConvChain
+    conversion.ML1
+    conversion.PksConvChain
+    conversion.loboss
+    conversion.mars
+    conversion.power
+    site.conversion
+    site.conversion.power
+
+.h1 Cryo
+    cryo.compressor
+
+.h1 Environment
+    environment.lightning
+    environment.protection
+    environment.weather
+    environment.weather.power
+    environment.weather.vaisala
+
+.h1 Network
+    network
+
+.h1 Receiver
+    receiver
+    receiver.13mm
+    receiver.mars
+    receiver.mb
+    receiver.tenfifty
+    signalpath.mbCableEq
+    signalpath.switchMatrix
+
+.h1 Misc
+    misc.rpc.summary
+    pkcpsrtemp.misc.caspsr.temp
+    pkcpsrtemp.misc.temp
+    misc
+    misc.compressor
+    misc.hybrid
+    misc.hybrid.control
+    misc.level2.rackC
+    misc.maser.LO
+    misc.maser.hydronic
+    misc.maser.power
+    misc.rfirotator
+    misc.server
+    misc.sweo
+    misc.tps
+    vsic
+    vsic.control
+    vlbi.power
+    pkmbtemp.misc.mb.temp
+    pktranslator1.misc.focusTranslator.temp
+    pkweather.misc.towerGndLevel.temp
+    site
+
+.h1 hidden
+    metadata.toc
+
