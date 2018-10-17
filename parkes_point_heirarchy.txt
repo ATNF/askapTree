@@ -7,9 +7,9 @@
 
 .h1 LO
     LO.stationref
-    LO.synth
-    LO.synth.control
-    LO.synth.status
+    LO.synth.SRS1
+    LO.synth.SRS1.control
+    LO.synth.SRS1.status
 
 .h1 Alarms
     alarms
@@ -38,16 +38,15 @@
 .h1 Timing
     misc.clock
     .h2 Maser
-        pkmasera.misc.maser.vremya.ahm
-        pkmasera.misc.maser.vremya.ahmpower
-        pkmasera.misc.maser.vremya.ctrl
-        pkmasera.misc.maser.vremya.pll
-        pkmasertemp.misc.maser.temp
+        misc.maser.vremya.ahm
+        misc.maser.vremya.ahmpower
+        misc.maser.vremya.ctrl
+        misc.maser.vremya.pll
+        misc.maser.temp
 
 .h1 Focus Cabin
-    pkfcpwr.misc.fcpower
-    pkfcpwr.misc.fcpower.control
-
+    misc.fcpower
+    misc.fcpower.control
 
 .h1 Backend
     backend.bec
@@ -56,8 +55,28 @@
     cal.ccu
 
 .h1 Conversion
-    conversion
-    conversion.CXX
+    conversion.C6
+    conversion.C11
+    conversion.C12
+    conversion.C13
+    conversion.C14
+    conversion.C30
+    conversion.C31
+    conversion.C40
+    conversion.C41
+    conversion.C42
+    conversion.C50
+    conversion.C51
+    conversion.C52
+    conversion.C53
+    conversion.C54
+    conversion.C60
+    conversion.C61
+    conversion.C90
+    conversion.C91
+    conversion.C92
+    conversion.C93
+    conversion.C94
     conversion.MBConvChain
     conversion.ML1
     conversion.PksConvChain
@@ -69,6 +88,7 @@
 
 .h1 Cryo
     cryo.compressor
+    site.cryo.compressor
 
 .h1 Environment
     environment.lightning
@@ -91,8 +111,8 @@
 
 .h1 Misc
     misc.rpc.summary
-    pkcpsrtemp.misc.caspsr.temp
-    pkcpsrtemp.misc.temp
+    misc.caspsr.temp
+    misc.temp
     misc
     misc.compressor
     misc.hybrid
@@ -108,9 +128,9 @@
     vsic
     vsic.control
     vlbi.power
-    pkmbtemp.misc.mb.temp
-    pktranslator1.misc.focusTranslator.temp
-    pkweather.misc.towerGndLevel.temp
+    misc.mb.temp
+    misc.focusTranslator.temp
+    misc.towerGndLevel.temp
     site
 
 .h1 hidden
