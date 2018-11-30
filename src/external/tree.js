@@ -16,23 +16,30 @@ $(document).keydown(function(event) {
 function makeTree(cont, options) {
     var influxHost = influxHost;
     var xoffset = 30;
+    
+    var ajaxOptions = {};
 
+    // Set up options used in ajax call
+    ajaxOptions.method = "GET";
+    ajaxOptions.url = options.influxHost + "/query?pretty=true";
+    ajaxOptions.type = "POST";
+    ajaxOptions.datatype = "json";
+    
+    ajaxOptions.data = {
+	db: options.database,
+	q:'show series from "metadata.toc"'
+    };
+    
+    // Make authorization headers optional
+    if (options.username != '' && options.password != '') {
+	ajaxOptions.xhdrFields = { withCredentials: true };
+	ajaxOptions.headers = { 'Authorization': 'Basic ' + btoa(options.username + ':' + options.password) }
+    }
+       
     displayOptions = options.displayOptions;
-
+    
 // Initialise the tree with the subsystems to be populated by call to influxDB
-    $.ajax( {
-        xhdrFields: {
-            withCredentials : true
-        },
-        headers: {
-            'Authorization' : 'Basic ' + btoa(options.username + ':' + options.password)
-        },
-        method: 'GET',
-        url: options.influxHost + "/query?pretty=true",
-        type: 'POST',
-        data: { db: options.database, q:'show series from "metadata.toc"'}, // Gets the tree structure information down to measurement name in a json object
-        datatype: 'json'
-    }).done(function(result) { 
+    $.ajax(ajaxOptions).done(function(result) { 
         window.treeData = {
             "name": options.treeName,
             "children": []
@@ -341,19 +348,27 @@ function checkChildren(children, nodeName) {
 // on level 2, and the location of the measurement. The purpose of the function is to append the field key data to the correct measurement name. It initially places a jquery request 
 // to grab the field keys for the measurement in a json object from the database.
 function getField(options, measurement, loc, locL2, locMeas) {
-    $.ajax( {
-        xhdrFields: {
-            withCredentials : true
-        },
-        headers: {
-            'Authorization' : 'Basic ' + btoa(options.username + ':' + options.password)
-        },
-        method: 'GET',
-        url: options.influxHost + "/query?pretty=true",
-        type: 'POST',
-        data: { db: options.database, q:'show field keys from "'+measurement+'"'},
-        datatype: 'json'
-    }).done(function(result) {
+
+    var ajaxOptions = {};
+
+    // Set up options used in ajax call
+    ajaxOptions.method = "GET";
+    ajaxOptions.url = options.influxHost + "/query?pretty=true";
+    ajaxOptions.type = "POST";
+    ajaxOptions.datatype = "json";
+    
+    ajaxOptions.data = {
+	db: options.database,
+	q:'show field keys from "'+measurement+'"'
+    };
+    
+    // Make authorization headers optional
+    if (options.username != '' && options.password != '') {
+	ajaxOptions.xhdrFields = { withCredentials: true };
+	ajaxOptions.headers = { 'Authorization': 'Basic ' + btoa(options.username + ':' + options.password) }
+    }
+    
+    $.ajax(ajaxOptions).done(function(result) {
         var tempObj = null;
 
         // Check to make sure the returned json object is defined before continuing
