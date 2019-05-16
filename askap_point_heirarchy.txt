@@ -96,7 +96,11 @@
 
 .h1 Timing
     misc.clock                  - Timing ATDC
-    misc.maser                  - Maser
+    .h2 Maser
+    	misc.maser.vremya.ahm   	- Maser AHM
+    	misc.maser.vremya.ahmpower   	- Maser AHM Power
+    	misc.maser.vremya.ctrl   	- Maser Control
+    	misc.maser.vremya.pll   	- Maser PLL
 
 .h1 Ingest
     cp.manager.ingest           - CP Manager
