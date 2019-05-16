@@ -244,13 +244,15 @@ return function(callback) {
                     },
                     "id": 1,
                     "legend": {
-                        "avg": false,
-                        "current": false,
+                        "avg": true,
+                        "current": true,
                         "max": true,
                         "min": true,
                         "show": true,
                         "total": false,
-                        "values": true
+                        "values": true,
+			"alignAsTable": true,
+			"rightSide": true
                     },
                     "lines": lines,
                     "line1idth": 1,
