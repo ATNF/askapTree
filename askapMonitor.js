@@ -252,7 +252,7 @@ return function(callback) {
                         "total": false,
                         "values": true,
 			"alignAsTable": true,
-			"rightSide": true
+			"rightSide": false
                     },
                     "lines": lines,
                     "line1idth": 1,
@@ -365,7 +365,7 @@ return function(callback) {
         url = window.location.href; // Grab the URL as a string
         url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
 
-        dashboard.panels.push({ // Simply create a panel displaying the text "Failed to lookup name"
+        dashboard.panels.push({ // Text panel to switch to discrete view
                     title: "",
                     type: 'text',
                     "gridPos": {
@@ -376,7 +376,11 @@ return function(callback) {
                     },
                     fill: 1,
                     mode: "html",
-                    content: "<p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"&dispOpt="+dispOpt+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
+                    content: "<p align=\"center\">The plot can be copied and pasted in to another dashboard" +
+                             "if they contain the same template variables. Alternatively remove the template" +
+                             "variables from the query.</p><p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+
+                        meas+"&field="+field+"&plotType="+newType+"&dispOpt="+dispOpt+
+                        "\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
         });;
         callback(dashboard); // Return the completed dashboard
 
@@ -409,8 +413,8 @@ function dropDownGen(key, database, meas, i) {
         {
             "allValue": null,
             "current": {
-                "text": "", //All
-                "value": [ "ak01" ] // Default to display all keys on page load $_all
+                "text": "All",
+                "value": [ "$__all" ]
             },
             "datasource": database,
             "hide": 0,
