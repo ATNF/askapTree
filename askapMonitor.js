@@ -34,7 +34,7 @@ return function(callback) {
     // time can be overriden in the url using from/to parameters, but this is
     // handled automatically in grafana core during dashboard initialization
     dashboard.time = {
-        from: "now-7d",
+        from: "now-24h",
         to: "now"
     };
     dashboard.timezone = "browser";
@@ -244,15 +244,15 @@ return function(callback) {
                     },
                     "id": 1,
                     "legend": {
-                        "avg": true,
+                        "avg": false,
                         "current": true,
                         "max": true,
                         "min": true,
                         "show": true,
                         "total": false,
                         "values": true,
-			"alignAsTable": true,
-			"rightSide": false
+                        "rightSide": true,
+                        "alignAsTable": true
                     },
                     "lines": lines,
                     "line1idth": 1,
@@ -365,22 +365,21 @@ return function(callback) {
         url = window.location.href; // Grab the URL as a string
         url = url.substring(0, url.indexOf('/dash')); // Get rid of everything after the port number as it is not needed.
 
-        dashboard.panels.push({ // Text panel to switch to discrete view
+        dashboard.panels.push({ // Text panel to switch to alternate view & other guidance
                     title: "",
                     type: 'text',
                     "gridPos": {
-                        "h": 3,
+                        "h": 5,
                         "w": 24,
                         "x": 0,
                         "y": 9
                     },
                     fill: 1,
                     mode: "html",
-                    content: "<p align=\"center\">The plot can be copied and pasted in to another dashboard" +
-                             "if they contain the same template variables. Alternatively remove the template" +
-                             "variables from the query.</p><p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+
-                        meas+"&field="+field+"&plotType="+newType+"&dispOpt="+dispOpt+
-                        "\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a>\n</p>"
+                    content: "<p>\n\t<a target=\"_blank\" href=\""+url+"/dashboard/script/askapMonitor.js?meas="+meas+"&field="+field+"&plotType="+newType+"&dispOpt="+dispOpt+"\"><h4 align=\"center\">View this measurement as a "+otherPlotName+" instead</h4></a></p>" + 
+			"<br/><center>The visualation can be changed to a different type (e.g. table) by clicking on panel title | Edit and selecting visualization on the left</center>" +
+			"<br/><center>To copy this panel to you own dashboard, click on panel title | More | Copy, then go to your dashboard and click add panel | Paste copied panel</center>" + 
+            "<center>Both dasbhoards must have the same template variables, or you may have to edit query after pasting to remove them</center>"
         });;
         callback(dashboard); // Return the completed dashboard
 
@@ -414,7 +413,7 @@ function dropDownGen(key, database, meas, i) {
             "allValue": null,
             "current": {
                 "text": "All",
-                "value": [ "$__all" ]
+                "value": [ "$__all" ] // Default to display all keys on page load $_all
             },
             "datasource": database,
             "hide": 0,
