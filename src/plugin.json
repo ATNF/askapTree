@@ -6,19 +6,19 @@
   "info": {
     "description": "ASKAP tree hierarchy plugin for Grafana",
     "author": {
-      "name": "Stuart Buchan"
+      "name": "Craig Haskins"
     },
     "keywords": ["tree", "panel"],
     "logos": {
             "small": "img/logo.png",
             "large": "img/logo.png"
         },
-    "version": "1.0.3",
-    "updated": "2018-06-26"
+    "version": "1.1.0",
+    "updated": "2019-08-16"
   },
 
   "dependencies": {
-    "grafanaVersion": "5.1.3",
+    "grafanaVersion": "6.3.2",
     "plugins": [ ]
   }
 }
