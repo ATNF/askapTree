@@ -117,7 +117,7 @@ return function(callback) {
     // Returns a JSON object containing units, description and valid tag set.
     $.ajax( {
         method: 'GET',
-        url: "http://akingest01.atnf.csiro.au:5000/influx?",
+        url: "https://influx-mro.atnf.csiro.au/pv2influx/influx?",
         type: 'POST',
         data: { measurement: meas, field: field},
         datatype: 'json'
