@@ -13,8 +13,8 @@ Hash: SHA512
     "http://localhost:3000/"
   ],
   "plugin": "atnf-tree-panel",
-  "version": "1.1.1",
-  "time": 1623916147765,
+  "version": "1.0.5",
+  "time": 1623916328467,
   "keyId": "7e4d0c6a708866e7",
   "files": {
     "css/dark.css": "924f2421673b75175715b2cb1398abc5562518df4f100f37b3b5ca0740442226",
@@ -23,7 +23,7 @@ Hash: SHA512
     "editor.html": "1a6a3fd3c5ed5931403d2796bcf993979d3770ae8e70b204233f415380157c32",
     "module.js.map": "3e2cfb102fdd05966d185893d853df830c8e82a7411404293b79e2bc05ef839e",
     "ctrl.js.map": "7fcad43b07cc6b9c32c9f6a975a02a9877de5ff56b4ba60e52fa4541001a53c8",
-    "plugin.json": "bb6cfd2e768a7f758d8aee62d348bd44eacfb8d7911c2cd684acff167a064f71",
+    "plugin.json": "0dc0f2940b3c3420aaf74cdd3b4c62e94b9ee56c90d813bdc353578529e5b711",
     "README.md": "579dec77e5418b57a7057f4fd7ec08f503ac22a10da15cd45eb51066284685c8",
     "img/logo.png": "79f330a84a68bfe622f58e9342c9048688cfff8949e9bfd13d2e4cde9c09e282",
     "module.js": "604b2c260aaca4e5f67c9711ef126650dcf49662f1ed81bf801e4910ca2d32e6",
@@ -36,9 +36,9 @@ Hash: SHA512
 Version: OpenPGP.js v4.10.1
 Comment: https://openpgpjs.org
 
-wqEEARMKAAYFAmDK/nMACgkQfk0ManCIZud/WAIIs3pOzCPsrkoPcihn/94Z
-QqvpDuMF15WdKtDLCme3ojub35aHbL0+4h0HUz1AyjNWhX2kgDj5HXYYlsFn
-PsL9yPECCQE2p0MnxnN2/KLEEQkrCQ0wWNh9JlVtFtYl1m46d+F8mhFdnoUp
-ggCDdA+MSDaEPMjIep5X/eqqtMrzIgzb+hbhoQ==
-=uxpF
+wqEEARMKAAYFAmDK/ygACgkQfk0ManCIZueXQQIFFG4aEh0Eo2KNNKObGyRF
+BltIShFGS3ELyB4ZE9Ffd653cjNMMtc9PHYd5UH28Z4YPkU/Nxr4ggS3Rml2
+TupxzQkCCQFXQoHZ6VyGLP1WeA8vTwayOwN93OEDl0P4k13s9g/RGyU4M0cJ
+dabvr9dQDnlmKFPt+g0n/JJtxm9HgsLt/iVqZw==
+=oSg0
 -----END PGP SIGNATURE-----
