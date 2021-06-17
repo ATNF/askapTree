@@ -1,6 +1,6 @@
 {
   "name": "atnf-tree-panel",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "ASKAP hierarchy panel for Grafana",
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
     "grunt-babel": "^7.0.0",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0"
+  },
+  "dependencies": {
+    "@grafana/toolkit": "^8.0.2"
   }
 }

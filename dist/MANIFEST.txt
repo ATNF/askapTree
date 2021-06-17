@@ -1,0 +1,44 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "private",
+  "signedByOrg": "atnf",
+  "signedByOrgName": "atnf",
+  "rootUrls": [
+    "https://monview-mro.atnf.csiro.au/",
+    "https://monview-pks.atnf.csiro.au/",
+    "http://localhost:3000/"
+  ],
+  "plugin": "atnf-tree-panel",
+  "version": "1.1.1",
+  "time": 1623916147765,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "css/dark.css": "924f2421673b75175715b2cb1398abc5562518df4f100f37b3b5ca0740442226",
+    "css/light.css": "26be9375297e48edbb7fc98e172b62f2b9c8106fe6271c7b32b076a0ee3d30a3",
+    "ctrl.js": "1b29f3c2b5f3c229787198728532f185ab780128cdc6cc34b58804ce97f93013",
+    "editor.html": "1a6a3fd3c5ed5931403d2796bcf993979d3770ae8e70b204233f415380157c32",
+    "module.js.map": "3e2cfb102fdd05966d185893d853df830c8e82a7411404293b79e2bc05ef839e",
+    "ctrl.js.map": "7fcad43b07cc6b9c32c9f6a975a02a9877de5ff56b4ba60e52fa4541001a53c8",
+    "plugin.json": "bb6cfd2e768a7f758d8aee62d348bd44eacfb8d7911c2cd684acff167a064f71",
+    "README.md": "579dec77e5418b57a7057f4fd7ec08f503ac22a10da15cd45eb51066284685c8",
+    "img/logo.png": "79f330a84a68bfe622f58e9342c9048688cfff8949e9bfd13d2e4cde9c09e282",
+    "module.js": "604b2c260aaca4e5f67c9711ef126650dcf49662f1ed81bf801e4910ca2d32e6",
+    "external/d3.min.js": "4cd96b6603316d0a1e08a09851d86c2cbb8b640efb8dc2d4ff71fc05944cff79",
+    "external/tree.js": "abc40b156a815f265fdd12318430924666c0e59a1f5fbb404e7bea91dafb8587",
+    "partials/template.html": "f63220087493cd3a68507d200f5957c973a669872a2dd3c249fcc88372f38276"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v4.10.1
+Comment: https://openpgpjs.org
+
+wqEEARMKAAYFAmDK/nMACgkQfk0ManCIZud/WAIIs3pOzCPsrkoPcihn/94Z
+QqvpDuMF15WdKtDLCme3ojub35aHbL0+4h0HUz1AyjNWhX2kgDj5HXYYlsFn
+PsL9yPECCQE2p0MnxnN2/KLEEQkrCQ0wWNh9JlVtFtYl1m46d+F8mhFdnoUp
+ggCDdA+MSDaEPMjIep5X/eqqtMrzIgzb+hbhoQ==
+=uxpF
+-----END PGP SIGNATURE-----
